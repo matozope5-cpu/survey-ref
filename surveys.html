@@ -1030,6 +1030,18 @@
             return base.slice(0, num);
         }
 
+        function getPlanLevel(planName) {
+            const levels = {
+                'Basic': 1,
+                'Standard': 2,
+                'Standard Plus': 3,
+                'Premium': 4,
+                'Premium Plus': 5,
+                'Platinum': 6
+            };
+            return levels[planName] || 0;
+        }
+
         function renderSurveys() {
             const user = getCurrentUser();
             const grid = document.getElementById('surveysGrid');
@@ -1051,7 +1063,7 @@
                     </div>
                 `;
             }).join('');
-            // Attach event listeners to buttons
+
             document.querySelectorAll('.btn-take').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -1059,24 +1071,27 @@
                     const survey = surveys.find(s => s.id === surveyId);
                     if (!survey) return;
                     const user = getCurrentUser();
-                    if (!user) { window.location.href = 'login.html'; return; }
-                    // Check if already completed
+                    if (!user) { window.location.href = 'index.html'; return; }
                     if (user.completedSurveys && user.completedSurveys.includes(survey.id)) {
                         showToast('You have already completed this survey');
                         return;
                     }
-                    // Check access based on required plan
-                    const userPlan = user.subscription ? user.subscription.plan : null;
+
+                    const userPlanName = user.subscription ? user.subscription.plan : null;
+                    const userLevel = getPlanLevel(userPlanName);
+
                     if (survey.requiredPlan === 'free') {
                         startSurvey(survey);
                     } else if (survey.requiredPlan === 'standard') {
-                        if (userPlan === 'standard' || userPlan === 'premium') {
+                        // Standard surveys require at least Standard level (level >= 2)
+                        if (userLevel >= 2) {
                             startSurvey(survey);
                         } else {
                             showSubscriptionModal({ surveyId: survey.id, requiredPlan: 'standard' });
                         }
                     } else if (survey.requiredPlan === 'premium') {
-                        if (userPlan === 'premium') {
+                        // Premium surveys require at least Premium level (level >= 4)
+                        if (userLevel >= 4) {
                             startSurvey(survey);
                         } else {
                             showSubscriptionModal({ surveyId: survey.id, requiredPlan: 'premium' });
@@ -1289,9 +1304,9 @@
             const required = pendingAction ? pendingAction.requiredPlan : null;
             let message = '';
             if (required === 'standard') {
-                message = '<div style="margin-bottom: 20px; background: #fef3c7; padding: 12px; border-radius: 12px;"><i class="fas fa-info-circle"></i> This survey requires a <strong>Standard</strong> or <strong>Premium</strong> plan.</div>';
+                message = '<div style="margin-bottom: 20px; background: #fef3c7; padding: 12px; border-radius: 12px;"><i class="fas fa-info-circle"></i> This survey requires a <strong>Standard</strong> or higher plan.</div>';
             } else if (required === 'premium') {
-                message = '<div style="margin-bottom: 20px; background: #f1e5ff; padding: 12px; border-radius: 12px;"><i class="fas fa-info-circle"></i> This survey requires a <strong>Premium</strong> plan.</div>';
+                message = '<div style="margin-bottom: 20px; background: #f1e5ff; padding: 12px; border-radius: 12px;"><i class="fas fa-info-circle"></i> This survey requires a <strong>Premium</strong> or higher plan.</div>';
             }
             document.getElementById('subscriptionModalTitle').innerText = 'Choose a Subscription Plan';
             container.innerHTML = `
@@ -1299,10 +1314,11 @@
                 <div style="margin-bottom: 20px;">
                     <p>Select a plan that fits your needs. All plans include withdrawals after reaching Ksh 500.</p>
                 </div>
-                <div class="subscription-plan" data-plan="basic" data-price="99">
+
+                <div class="subscription-plan" data-plan="Basic" data-price="199">
                     <div class="plan-header">
                         <span class="plan-name">Basic</span>
-                        <span class="plan-price">Ksh 99 / month</span>
+                        <span class="plan-price">Ksh 199 / month</span>
                     </div>
                     <ul class="plan-features">
                         <li><i class="fas fa-check-circle"></i> Access to free surveys</li>
@@ -1310,40 +1326,85 @@
                         <li><i class="fas fa-check-circle"></i> Standard support</li>
                     </ul>
                 </div>
-                <div class="subscription-plan" data-plan="standard" data-price="299">
+
+                <div class="subscription-plan" data-plan="Standard" data-price="399">
                     <div class="plan-header">
                         <span class="plan-name">Standard</span>
-                        <span class="plan-price">Ksh 299 / month</span>
+                        <span class="plan-price">Ksh 399 / month</span>
                     </div>
                     <ul class="plan-features">
                         <li><i class="fas fa-check-circle"></i> All Basic benefits</li>
-                        <li><i class="fas fa-check-circle"></i> Access to standard surveys (Ksh 350–499)</li>
                         <li><i class="fas fa-check-circle"></i> Priority support</li>
+                        <li><i class="fas fa-check-circle"></i> 3 standard surveys daily</li>
+                        <li><i class="fas fa-check-circle"></i> Up to Ksh 15,000 monthly earnings</li>
                     </ul>
                 </div>
-                <div class="subscription-plan" data-plan="premium" data-price="499">
+
+                <div class="subscription-plan" data-plan="Standard Plus" data-price="499">
                     <div class="plan-header">
-                        <span class="plan-name">Premium</span>
+                        <span class="plan-name">Standard Plus</span>
                         <span class="plan-price">Ksh 499 / month</span>
+                        <span style="font-size:0.7rem; background:#f97316; color:white; padding:2px 8px; border-radius:20px;">BEST VALUE</span>
                     </div>
                     <ul class="plan-features">
                         <li><i class="fas fa-check-circle"></i> All Standard benefits</li>
-                        <li><i class="fas fa-check-circle"></i> Access to premium surveys (up to Ksh 760)</li>
-                        <li><i class="fas fa-check-circle"></i> Priority support + early access</li>
-                        <li><i class="fas fa-check-circle"></i> Higher earning potential</li>
+                        <li><i class="fas fa-check-circle"></i> 5 standard surveys daily</li>
+                        <li><i class="fas fa-check-circle"></i> Up to Ksh 30,000 monthly earnings</li>
                     </ul>
                 </div>
+
+                <div class="subscription-plan" data-plan="Premium" data-price="799">
+                    <div class="plan-header">
+                        <span class="plan-name">Premium</span>
+                        <span class="plan-price">Ksh 799 / month</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check-circle"></i> All Standard Plus benefits</li>
+                        <li><i class="fas fa-check-circle"></i> Access to premium surveys (up to Ksh 760)</li>
+                        <li><i class="fas fa-check-circle"></i> 10 premium surveys daily</li>
+                        <li><i class="fas fa-check-circle"></i> Up to Ksh 40,500 monthly earnings</li>
+                    </ul>
+                </div>
+
+                <div class="subscription-plan" data-plan="Premium Plus" data-price="999">
+                    <div class="plan-header">
+                        <span class="plan-name">Premium Plus</span>
+                        <span class="plan-price">Ksh 999 / month</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check-circle"></i> All Premium benefits</li>
+                        <li><i class="fas fa-check-circle"></i> 15 premium surveys daily</li>
+                        <li><i class="fas fa-check-circle"></i> Up to Ksh 60,500 monthly earnings</li>
+                    </ul>
+                </div>
+
+                <div class="subscription-plan" data-plan="Platinum" data-price="1499">
+                    <div class="plan-header">
+                        <span class="plan-name">Platinum</span>
+                        <span class="plan-price">Ksh 1499 / month</span>
+                        <span style="font-size:0.7rem; background:#f97316; color:white; padding:2px 8px; border-radius:20px;">BEST DEAL</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check-circle"></i> All Premium Plus benefits</li>
+                        <li><i class="fas fa-check-circle"></i> 15 premium surveys daily</li>
+                        <li><i class="fas fa-check-circle"></i> 5 moderator surveys daily</li>
+                        <li><i class="fas fa-check-circle"></i> Up to Ksh 100,000 monthly earnings</li>
+                    </ul>
+                </div>
+
                 <button class="next-btn" id="nextToMpesa">Continue</button>
             `;
+
             const planElements = document.querySelectorAll('.subscription-plan');
             planElements.forEach(plan => {
                 const planName = plan.getAttribute('data-plan');
-                if (required === 'standard' && planName === 'standard') {
+                // Highlight recommended plan if required
+                if (required === 'standard' && planName === 'Standard') {
                     plan.classList.add('selected');
-                    selectedPlan = { name: 'standard', price: 299 };
-                } else if (required === 'premium' && planName === 'premium') {
+                    selectedPlan = { name: 'Standard', price: 399 };
+                } else if (required === 'premium' && planName === 'Premium') {
                     plan.classList.add('selected');
-                    selectedPlan = { name: 'premium', price: 499 };
+                    selectedPlan = { name: 'Premium', price: 799 };
                 }
                 plan.addEventListener('click', () => {
                     document.querySelectorAll('.subscription-plan').forEach(p => p.classList.remove('selected'));
@@ -1354,6 +1415,7 @@
                     };
                 });
             });
+
             document.getElementById('nextToMpesa').addEventListener('click', () => {
                 if (!selectedPlan) {
                     showToast('Please select a plan');
@@ -1369,7 +1431,7 @@
             document.getElementById('subscriptionModalTitle').innerText = 'Complete Subscription';
             container.innerHTML = `
                 <div style="margin-bottom: 20px;">
-                    <p>You've selected <strong>${selectedPlan.name.charAt(0).toUpperCase() + selectedPlan.name.slice(1)}</strong> plan.</p>
+                    <p>You've selected <strong>${selectedPlan.name}</strong> plan (Ksh ${selectedPlan.price}).</p>
                     <p>Enter your M-Pesa number to pay Ksh ${selectedPlan.price}.</p>
                 </div>
                 <div class="mpesa-input">
