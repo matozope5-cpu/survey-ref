@@ -282,6 +282,79 @@
             box-shadow: 0 4px 12px rgba(79,70,229,0.2);
         }
 
+        .payment-method-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .payment-method-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #eef2f6;
+            border-radius: 12px;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .payment-method-input:focus {
+            border-color: #4f46e5;
+        }
+
+        .payment-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f9fafb;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid #eef2f6;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .payment-number {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1rem;
+        }
+
+        .payment-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+
+        .action-btn.edit {
+            color: #4f46e5;
+        }
+
+        .action-btn.edit:hover {
+            background: rgba(79,70,229,0.1);
+        }
+
+        .action-btn.delete {
+            color: #ef4444;
+        }
+
+        .action-btn.delete:hover {
+            background: rgba(239,68,68,0.1);
+        }
+
         .profile-info {
             display: flex;
             gap: 24px;
@@ -630,6 +703,18 @@
             .mobile-balance-card {
                 display: block;
             }
+            .payment-method-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .payment-display {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .payment-actions {
+                justify-content: center;
+            }
             .profile-info {
                 flex-direction: column;
                 gap: 12px;
@@ -759,6 +844,14 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Payment Method Section -->
+            <div class="setting-section" id="paymentMethodSection">
+                <div class="section-header">
+                    <h3>Payment Method</h3>
+                </div>
+                <div id="paymentMethodContainer"></div>
             </div>
 
             <div class="setting-section">
@@ -929,6 +1022,95 @@
             if (user.passwordLastChanged) {
                 document.getElementById('lastChanged').innerText = `Last changed: ${user.passwordLastChanged}`;
             }
+            renderPaymentMethod(user);
+        }
+
+        // ======================== Payment Method UI ========================
+        function renderPaymentMethod(user) {
+            const container = document.getElementById('paymentMethodContainer');
+            if (!user.mpesaNumber) {
+                // Show input to add
+                container.innerHTML = `
+                    <div class="payment-method-row">
+                        <input type="tel" id="mpesaNumberInput" class="payment-method-input" placeholder="07XXXXXXXX">
+                        <button class="btn-outline" id="savePaymentMethodBtn">Save</button>
+                    </div>
+                `;
+                document.getElementById('savePaymentMethodBtn')?.addEventListener('click', () => savePaymentMethod());
+            } else {
+                // Show saved number with edit/delete
+                container.innerHTML = `
+                    <div class="payment-display">
+                        <div class="payment-number">
+                            <i class="fas fa-phone-alt" style="margin-right:8px;"></i>
+                            ${user.mpesaNumber}
+                        </div>
+                        <div class="payment-actions">
+                            <button class="action-btn edit" id="editPaymentBtn"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="action-btn delete" id="deletePaymentBtn"><i class="fas fa-trash-alt"></i> Delete</button>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('editPaymentBtn')?.addEventListener('click', () => editPaymentMethod());
+                document.getElementById('deletePaymentBtn')?.addEventListener('click', () => deletePaymentMethod());
+            }
+        }
+
+        function savePaymentMethod() {
+            const user = getCurrentUser();
+            if (!user) return;
+            const mpesa = document.getElementById('mpesaNumberInput').value.trim();
+            if (!mpesa) {
+                showToast('Please enter your M-Pesa number');
+                return;
+            }
+            if (!/^07\d{8}$/.test(mpesa)) {
+                showToast('Enter a valid M-Pesa number (07XXXXXXXX)');
+                return;
+            }
+            user.mpesaNumber = mpesa;
+            updateUser(user);
+            updateSettingsUI(user);
+            showToast('Payment method saved successfully');
+        }
+
+        function editPaymentMethod() {
+            const user = getCurrentUser();
+            if (!user) return;
+            // Switch to edit mode: show input with current number
+            const container = document.getElementById('paymentMethodContainer');
+            container.innerHTML = `
+                <div class="payment-method-row">
+                    <input type="tel" id="mpesaNumberInput" class="payment-method-input" placeholder="07XXXXXXXX" value="${user.mpesaNumber}">
+                    <button class="btn-outline" id="savePaymentMethodBtn">Save</button>
+                    <button class="btn-outline" id="cancelEditBtn" style="background:#f3f4f6; color:#4b5563;">Cancel</button>
+                </div>
+            `;
+            document.getElementById('savePaymentMethodBtn')?.addEventListener('click', () => savePaymentMethod());
+            document.getElementById('cancelEditBtn')?.addEventListener('click', () => {
+                renderPaymentMethod(user); // revert to display mode
+            });
+        }
+
+        function deletePaymentMethod() {
+            const user = getCurrentUser();
+            if (!user) return;
+            Swal.fire({
+                title: 'Remove Payment Method?',
+                text: 'You will need to add a new M-Pesa number to withdraw funds.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, remove',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#ef4444'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    user.mpesaNumber = null;
+                    updateUser(user);
+                    updateSettingsUI(user);
+                    showToast('Payment method removed');
+                }
+            });
         }
 
         // ======================== Payment helpers (STK push) ========================
@@ -1019,10 +1201,10 @@
                 <div style="margin-bottom: 20px;">
                     <p>Select a plan that fits your needs. All plans include withdrawals after reaching Ksh 500.</p>
                 </div>
-                <div class="subscription-plan" data-plan="basic" data-price="99">
+                <div class="subscription-plan" data-plan="Basic" data-price="199">
                     <div class="plan-header">
                         <span class="plan-name">Basic</span>
-                        <span class="plan-price">Ksh 99 / month</span>
+                        <span class="plan-price">Ksh 199 / month</span>
                     </div>
                     <ul class="plan-features">
                         <li><i class="fas fa-check-circle"></i> Access to free surveys</li>
@@ -1030,27 +1212,62 @@
                         <li><i class="fas fa-check-circle"></i> Standard support</li>
                     </ul>
                 </div>
-                <div class="subscription-plan" data-plan="standard" data-price="299">
+                <div class="subscription-plan" data-plan="Standard" data-price="399">
                     <div class="plan-header">
                         <span class="plan-name">Standard</span>
-                        <span class="plan-price">Ksh 299 / month</span>
+                        <span class="plan-price">Ksh 399 / month</span>
                     </div>
                     <ul class="plan-features">
                         <li><i class="fas fa-check-circle"></i> All Basic benefits</li>
                         <li><i class="fas fa-check-circle"></i> Access to standard surveys (Ksh 350–499)</li>
                         <li><i class="fas fa-check-circle"></i> Priority support</li>
+                        <li><i class="fas fa-check-circle"></i> 2 surveys daily</li>
                     </ul>
                 </div>
-                <div class="subscription-plan" data-plan="premium" data-price="499">
+                <div class="subscription-plan" data-plan="Standard Plus" data-price="499">
                     <div class="plan-header">
-                        <span class="plan-name">Premium</span>
+                        <span class="plan-name">Standard Plus</span>
                         <span class="plan-price">Ksh 499 / month</span>
+                        <span style="font-size:0.7rem; background:#f97316; color:white; padding:2px 8px; border-radius:20px;">BEST VALUE</span>
                     </div>
                     <ul class="plan-features">
                         <li><i class="fas fa-check-circle"></i> All Standard benefits</li>
+                        <li><i class="fas fa-check-circle"></i> 5 surveys daily</li>
+                        <li><i class="fas fa-check-circle"></i> Up to Ksh 1,000 daily earnings</li>
+                    </ul>
+                </div>
+                <div class="subscription-plan" data-plan="Premium" data-price="799">
+                    <div class="plan-header">
+                        <span class="plan-name">Premium</span>
+                        <span class="plan-price">Ksh 799 / month</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check-circle"></i> All Standard Plus benefits</li>
                         <li><i class="fas fa-check-circle"></i> Access to premium surveys (up to Ksh 760)</li>
-                        <li><i class="fas fa-check-circle"></i> Priority support + early access</li>
-                        <li><i class="fas fa-check-circle"></i> Higher earning potential</li>
+                        <li><i class="fas fa-check-circle"></i> 10 premium surveys daily</li>
+                        <li><i class="fas fa-check-circle"></i> Up to Ksh 2,500 daily earnings</li>
+                    </ul>
+                </div>
+                <div class="subscription-plan" data-plan="Premium Plus" data-price="999">
+                    <div class="plan-header">
+                        <span class="plan-name">Premium Plus</span>
+                        <span class="plan-price">Ksh 999 / month</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check-circle"></i> All Premium benefits</li>
+                        <li><i class="fas fa-check-circle"></i> 15 premium surveys daily</li>
+                        <li><i class="fas fa-check-circle"></i> Up to Ksh 3,500 daily earnings</li>
+                    </ul>
+                </div>
+                <div class="subscription-plan" data-plan="Platinum" data-price="1499">
+                    <div class="plan-header">
+                        <span class="plan-name">Platinum</span>
+                        <span class="plan-price">Ksh 1499 / month</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check-circle"></i> All Premium Plus benefits</li>
+                        <li><i class="fas fa-check-circle"></i> 5 moderator surveys daily</li>
+                        <li><i class="fas fa-check-circle"></i> Up to Ksh 5,000 daily earnings</li>
                     </ul>
                 </div>
                 <button class="next-btn" id="nextToMpesa">Continue</button>
@@ -1080,7 +1297,7 @@
             document.getElementById('subscriptionModalTitle').innerText = 'Complete Subscription';
             container.innerHTML = `
                 <div style="margin-bottom: 20px;">
-                    <p>You've selected <strong>${selectedPlan.name.charAt(0).toUpperCase() + selectedPlan.name.slice(1)}</strong> plan (Ksh ${selectedPlan.price}).</p>
+                    <p>You've selected <strong>${selectedPlan.name}</strong> plan (Ksh ${selectedPlan.price}).</p>
                     <p>Enter your M-Pesa number to pay Ksh ${selectedPlan.price}.</p>
                 </div>
                 <div class="mpesa-input">
@@ -1177,9 +1394,13 @@
                 showToast('Minimum withdrawal is Ksh 500');
                 return;
             }
+            if (!user.mpesaNumber) {
+                showToast('Please add your M-Pesa number in Payment Method first');
+                return;
+            }
             document.getElementById('withdrawBalanceDisplay').value = `Ksh ${user.balance}`;
             document.getElementById('withdrawAmount').value = '';
-            document.getElementById('withdrawPhone').value = user.mpesaNumber || '';
+            document.getElementById('withdrawPhone').value = user.mpesaNumber;
             document.getElementById('withdrawalModal').classList.add('active');
         }
 
@@ -1297,7 +1518,7 @@
         document.getElementById('logoutMenuItem').addEventListener('click', () => {
             sessionStorage.removeItem('loggedInUser');
             localStorage.removeItem('rememberedUser');
-            window.location.href = 'login.html';
+            window.location.href = 'index.html';
         });
 
         document.getElementById('withdrawBtn').addEventListener('click', () => {
@@ -1305,6 +1526,10 @@
             if (!user) return;
             if (user.balance < 500) {
                 showToast('Minimum withdrawal is Ksh 500');
+                return;
+            }
+            if (!user.mpesaNumber) {
+                showToast('Please add your M-Pesa number in Settings first');
                 return;
             }
             if (!user.subscription) {
@@ -1321,6 +1546,10 @@
                 showToast('Minimum withdrawal is Ksh 500');
                 return;
             }
+            if (!user.mpesaNumber) {
+                showToast('Please add your M-Pesa number in Payment Method first');
+                return;
+            }
             if (!user.subscription) {
                 showSubscriptionModal('withdraw');
             } else {
@@ -1333,6 +1562,10 @@
             if (!user) return;
             if (user.balance < 500) {
                 showToast('Minimum withdrawal is Ksh 500');
+                return;
+            }
+            if (!user.mpesaNumber) {
+                showToast('Please add your M-Pesa number in Settings first');
                 return;
             }
             if (!user.subscription) {
@@ -1349,7 +1582,7 @@
 
         const user = getCurrentUser();
         if (!user) {
-            window.location.href = 'login.html';
+            window.location.href = 'signup.html';
         } else {
             updateSettingsUI(user);
         }
