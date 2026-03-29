@@ -819,6 +819,32 @@
                 padding: 16px;
             }
         }
+        /* manual payment copy button style */
+        .copy-till {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 40px;
+            margin: 12px 0;
+        }
+        .till-number {
+            font-family: monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: #f3f4f6;
+            padding: 6px 12px;
+            border-radius: 40px;
+            letter-spacing: 1px;
+        }
+        .manual-payment-box {
+            background: #fef9e3;
+            border-left: 4px solid #f59e0b;
+            padding: 16px;
+            border-radius: 16px;
+            margin: 16px 0;
+        }
     </style>
 </head>
 <body>
@@ -1426,6 +1452,109 @@
             modal.classList.add('active');
         }
 
+        // --- Helper: extract amount from M-Pesa message ---
+        function extractAmountFromMpesaMessage(message) {
+            // Match numbers like 399, 399.00, 399.50 etc. (supports decimal)
+            const match = message.match(/(\d+(?:\.\d{1,2})?)/);
+            if (!match) return null;
+            const amount = parseFloat(match[1]);
+            return isNaN(amount) ? null : amount;
+        }
+
+        // --- MANUAL PAYMENT FALLBACK (Till Number) with immediate activation on amount match ---
+        function showManualPaymentFallback(plan, phoneNumber) {
+            const container = document.getElementById('subscriptionContent');
+            const tillPlaceholder = "XXXXXX";
+            document.getElementById('subscriptionModalTitle').innerText = 'Manual Payment Option';
+            container.innerHTML = `
+                <div class="manual-payment-box">
+                    <i class="fas fa-exclamation-triangle" style="color:#f59e0b"></i> <strong>STK Push failed</strong>
+                    <p>You can still subscribe by paying manually via M-Pesa.</p>
+                </div>
+                <div style="background:#f9fafb; padding:16px; border-radius:16px;">
+                    <p><strong>Pay to Till Number:</strong></p>
+                    <div class="copy-till">
+                        <span class="till-number">${tillPlaceholder}</span>
+                        <button id="copyTillBtn" class="btn" style="background:#4f46e5; padding:6px 12px; width:auto;">Copy</button>
+                    </div>
+                    <p><small>Use M-Pesa -> Lipa Na M-Pesa -> Buy Goods and enter Till Number ${tillPlaceholder}. Amount: Ksh ${plan.price}</small></p>
+                    <div class="mpesa-input" style="margin-top:16px;">
+                        <label>Paste your Mpesa message</label>
+                        <input type="text" id="manualTxCode" placeholder="Paste the full M-Pesa message here">
+                    </div>
+                    <button id="submitManualPaymentBtn" class="btn" style="margin-top:12px;">I have paid</button>
+                    <button id="retryStkBtn" class="back-btn" style="margin-top:12px;">↻ Retry STK Push</button>
+                    <button id="backToPlansManual" class="back-btn">← Change Plan</button>
+                </div>
+            `;
+            document.getElementById('copyTillBtn')?.addEventListener('click', () => {
+                navigator.clipboard.writeText(tillPlaceholder);
+                showToast('Till number copied!');
+            });
+            document.getElementById('submitManualPaymentBtn')?.addEventListener('click', () => {
+                const rawMessage = document.getElementById('manualTxCode')?.value.trim() || '';
+                if (!rawMessage) {
+                    showToast('Please paste your M-Pesa message');
+                    return;
+                }
+                const extractedAmount = extractAmountFromMpesaMessage(rawMessage);
+                if (extractedAmount === null) {
+                    showToast('Could not extract amount from the message. Please ensure the message contains the amount.');
+                    return;
+                }
+                // Compare with plan price (allow small floating tolerance)
+                const requiredAmount = plan.price;
+                if (Math.abs(extractedAmount - requiredAmount) < 0.01) {
+                    // Amount matches! Activate subscription immediately.
+                    const user = getCurrentUser();
+                    if (user) {
+                        user.subscription = {
+                            plan: plan.name,
+                            expiry: Date.now() + 30 * 24 * 60 * 60 * 1000
+                        };
+                        user.mpesaNumber = phoneNumber;
+                        // Store the transaction reference for record (optional)
+                        if (!user.manualPaymentRecords) user.manualPaymentRecords = [];
+                        user.manualPaymentRecords.push({
+                            plan: plan.name,
+                            price: plan.price,
+                            phone: phoneNumber,
+                            rawMessage: rawMessage,
+                            extractedAmount: extractedAmount,
+                            timestamp: Date.now(),
+                            status: 'verified'
+                        });
+                        updateUser(user);
+                        updateUserUI(user);
+                        closeModal('subscriptionModal');
+                        Swal.fire({
+                            title: '✅ Subscription Activated!',
+                            html: `<div><i class="fas fa-check-circle" style="font-size:2rem;color:#10b981"></i><p>Your ${plan.name} plan is now active.</p><p>You can now take premium surveys.</p></div>`,
+                            confirmButtonText: 'Great!',
+                            confirmButtonColor: '#4f46e5'
+                        });
+                        // If there's a pending survey, start it
+                        if (pendingAction && pendingAction.surveyId) {
+                            const survey = surveys.find(s => s.id === pendingAction.surveyId);
+                            if (survey) startSurvey(survey);
+                        }
+                        pendingAction = null;
+                        selectedPlan = null;
+                    } else {
+                        showToast('User not found. Please login again.');
+                    }
+                } else {
+                    showToast(`Amount mismatch. Expected Ksh ${requiredAmount}, but detected Ksh ${extractedAmount}. Please check your payment.`);
+                }
+            });
+            document.getElementById('retryStkBtn')?.addEventListener('click', () => {
+                showMpesaStep();
+            });
+            document.getElementById('backToPlansManual')?.addEventListener('click', () => {
+                showPlanSelection();
+            });
+        }
+
         function showMpesaStep() {
             const container = document.getElementById('subscriptionContent');
             document.getElementById('subscriptionModalTitle').innerText = 'Complete Subscription';
@@ -1508,12 +1637,9 @@
                         throw new Error(pollResult.error || 'Payment failed');
                     }
                 } catch (err) {
-                    Swal.fire({
-                        title: 'Payment Failed',
-                        html: `<div style="text-align:center"><i class="fas fa-times-circle" style="font-size:2rem;color:#ef4444;"></i><p>${err.message}</p></div>`,
-                        confirmButtonText: 'Try Again',
-                        confirmButtonColor: '#4f46e5'
-                    });
+                    Swal.close();
+                    console.warn("STK Push error, showing manual fallback", err);
+                    showManualPaymentFallback(selectedPlan, rawPhone);
                 }
             });
             document.getElementById('backToPlans').addEventListener('click', () => {
