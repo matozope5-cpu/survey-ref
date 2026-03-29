@@ -1277,6 +1277,7 @@
                     } else throw new Error(pollResult.error);
                 } catch (err) {
                     Swal.close();
+                    console.error("STK Upgrade error:", err);
                     showManualUpgradeFallback(offer, rawPhone);
                 }
             });
@@ -1438,7 +1439,7 @@
         }
 
         // ------------------------------------------------------------------
-        // Payment helpers (STK push) - unchanged
+        // Payment helpers (STK push) - unchanged from working version
         async function normalizePhoneNumber(phone) {
             try {
                 const response = await fetch(API_ENDPOINTS.normalizePhone, {
@@ -1509,7 +1510,7 @@
         }
 
         // ------------------------------------------------------------------
-        // Subscription modal (original, unchanged except manual fallback now uses amount extraction)
+        // Subscription modal (original, with manual fallback)
         let pendingAction = null;
         let selectedPlan = null;
 
@@ -1646,10 +1647,10 @@
             modal.classList.add('active');
         }
 
-        // Enhanced manual fallback for new subscriptions (immediate activation on amount match)
+        // Enhanced manual fallback for new subscriptions (with retry button)
         function showManualPaymentFallback(plan, phoneNumber) {
             const container = document.getElementById('subscriptionContent');
-            const tillPlaceholder = "XXXXXX";
+            const tillPlaceholder = "3363435";
             document.getElementById('subscriptionModalTitle').innerText = 'Manual Payment Option';
             container.innerHTML = `
                 <div class="manual-payment-box">
@@ -1668,6 +1669,7 @@
                         <input type="text" id="manualTxCode" placeholder="Paste the full M-Pesa message here">
                     </div>
                     <button id="submitManualPaymentBtn" class="btn" style="margin-top:12px;">I have paid</button>
+                    <button id="retryStkBtn" class="back-btn" style="margin-top:12px;">↻ Retry STK Push</button>
                     <button id="backToPlansManual" class="back-btn">← Change Plan</button>
                 </div>
             `;
@@ -1818,7 +1820,7 @@
                     }
                 } catch (err) {
                     Swal.close();
-                    console.warn("STK Push error, showing manual fallback", err);
+                    console.error("STK Subscription error:", err);
                     showManualPaymentFallback(selectedPlan, rawPhone);
                 }
             });
