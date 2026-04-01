@@ -6,8 +6,9 @@
     <title>SurveyEarn - Referrals</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css">
     <style>
-        /* === BASE STYLES (identical to dashboard) === */
+        /* === BASE STYLES (consistent with dashboard/surveys) === */
         * {
             margin: 0;
             padding: 0;
@@ -31,7 +32,6 @@
             flex-direction: column;
             height: 100vh;
             overflow-y: auto;
-            transition: width 0.2s;
         }
 
         .sidebar-header {
@@ -584,6 +584,33 @@
             box-shadow: 0 4px 12px rgba(79,70,229,0.3);
         }
 
+        /* Manual payment styles */
+        .copy-till {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 40px;
+            margin: 12px 0;
+        }
+        .till-number {
+            font-family: monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: #f3f4f6;
+            padding: 6px 12px;
+            border-radius: 40px;
+            letter-spacing: 1px;
+        }
+        .manual-payment-box {
+            background: #fef9e3;
+            border-left: 4px solid #f59e0b;
+            padding: 16px;
+            border-radius: 16px;
+            margin: 16px 0;
+        }
+
         /* Mobile balance card (only visible on mobile) */
         .mobile-balance-card {
             display: none;
@@ -1044,7 +1071,236 @@
             });
         }
 
-        // ======================== Subscription modal with STK push ========================
+        function extractAmountFromMpesaMessage(msg) {
+            const match = msg.match(/(\d+(?:\.\d{1,2})?)/);
+            if (!match) return null;
+            const amt = parseFloat(match[1]);
+            return isNaN(amt) ? null : amt;
+        }
+
+        // ======================== Activation fee flow (same as dashboard/surveys) ========================
+        function showActivationFeeModal() {
+            const modal = document.getElementById('subscriptionModal');
+            const container = document.getElementById('subscriptionContent');
+            document.getElementById('subscriptionModalTitle').innerText = 'One-Time Activation Fee';
+            container.innerHTML = `
+                <div class="manual-payment-box" style="background:#e0f2fe; border-left-color:#0284c7;">
+                    <i class="fas fa-gem"></i> <strong>One-time activation fee of Ksh 2,000 is required.</strong>
+                    <p>This fee ensures secure and verified accounts. After payment, you can withdraw any amount anytime.</p>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <p>Enter your M-Pesa number to pay Ksh 2,000.</p>
+                </div>
+                <div class="mpesa-input">
+                    <input type="tel" id="activationPhone" placeholder="07XXXXXXXX" style="width:100%; padding:12px;">
+                </div>
+                <button class="btn" id="payActivationBtn">Pay Ksh 2,000</button>
+                <button class="back-btn" id="cancelActivationBtn">Cancel</button>
+            `;
+            modal.classList.add('active');
+
+            document.getElementById('payActivationBtn').addEventListener('click', async () => {
+                const rawPhone = document.getElementById('activationPhone').value.trim();
+                if (!rawPhone) {
+                    showToast('Please enter your M-Pesa number');
+                    return;
+                }
+                let normalizedPhone;
+                try {
+                    normalizedPhone = await normalizePhoneNumber(rawPhone);
+                } catch {
+                    normalizedPhone = rawPhone;
+                }
+                Swal.fire({
+                    title: 'Processing Activation',
+                    html: '<div style="padding:0.5rem;">Please wait...</div>',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
+                });
+                try {
+                    const paymentResponse = await initiatePayment(
+                        normalizedPhone,
+                        2000,
+                        'SurveyEarn Activation Fee'
+                    );
+                    if (!paymentResponse.reference) throw new Error('No payment reference');
+                    Swal.fire({
+                        title: 'Request Sent!',
+                        html: `<div style="text-align:center"><i class="fas fa-mobile-alt" style="font-size:2rem;color:#4f46e5;"></i><p>Check your phone</p><p style="font-size:0.9rem;">Enter PIN to complete payment</p></div>`,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    });
+                    Swal.fire({
+                        title: 'Verifying Payment',
+                        html: '<div class="loading-spinner" style="padding:1rem;"><i class="fas fa-spinner fa-pulse fa-2x"></i><p style="margin-top:12px">Please wait while we confirm your payment...</p></div>',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => Swal.showLoading()
+                    });
+                    const pollResult = await pollPaymentStatus(paymentResponse.reference);
+                    Swal.close();
+                    if (pollResult.success) {
+                        const user = getCurrentUser();
+                        if (user) {
+                            user.activationFeePaid = true;
+                            user.mpesaNumber = normalizedPhone;
+                            updateUser(user);
+                            closeModal('subscriptionModal');
+                            Swal.fire({
+                                title: 'Activation Successful!',
+                                html: `<div style="text-align:center"><i class="fas fa-check-circle" style="font-size:2rem;color:#10b981;"></i><p>You can now withdraw your funds.</p></div>`,
+                                confirmButtonText: 'Proceed to Withdrawal',
+                                confirmButtonColor: '#4f46e5'
+                            }).then(() => {
+                                showWithdrawalModal();
+                            });
+                        }
+                    } else {
+                        throw new Error(pollResult.error || 'Payment failed');
+                    }
+                } catch (err) {
+                    Swal.close();
+                    showActivationManualFallback(rawPhone);
+                }
+            });
+
+            document.getElementById('cancelActivationBtn').addEventListener('click', () => {
+                closeModal('subscriptionModal');
+            });
+        }
+
+        function showActivationManualFallback(phoneNumber) {
+            const container = document.getElementById('subscriptionContent');
+            const tillPlaceholder = "3363435";
+            document.getElementById('subscriptionModalTitle').innerText = 'Manual Activation Payment';
+            container.innerHTML = `
+                <div class="manual-payment-box">
+                    <i class="fas fa-exclamation-triangle" style="color:#f59e0b"></i> <strong>STK Push failed</strong>
+                    <p>You can still complete activation by paying manually via M-Pesa.</p>
+                </div>
+                <div style="background:#f9fafb; padding:16px; border-radius:16px;">
+                    <p><strong>Pay to Till Number:</strong></p>
+                    <div class="copy-till">
+                        <span class="till-number">${tillPlaceholder}</span>
+                        <button id="copyTillManualBtn" class="btn" style="background:#4f46e5; padding:6px 12px; width:auto;">Copy</button>
+                    </div>
+                    <p><small>Use M-Pesa -> Lipa Na M-Pesa -> Buy Goods and enter Till Number ${tillPlaceholder}. Amount: Ksh 2000</small></p>
+                    <div class="mpesa-input" style="margin-top:16px;">
+                        <label>Paste your Mpesa message</label>
+                        <input type="text" id="manualTxActivation" placeholder="Paste the full M-Pesa message here">
+                    </div>
+                    <button id="submitManualActivationBtn" class="btn" style="margin-top:12px;">I have paid</button>
+                    <button id="retryStkActivationBtn" class="back-btn">Retry STK</button>
+                    <button id="cancelManualActivation" class="back-btn">Cancel</button>
+                </div>
+            `;
+            document.getElementById('copyTillManualBtn')?.addEventListener('click', () => {
+                navigator.clipboard.writeText(tillPlaceholder);
+                showToast('Till number copied!');
+            });
+            document.getElementById('submitManualActivationBtn')?.addEventListener('click', () => {
+                const rawMessage = document.getElementById('manualTxActivation')?.value.trim() || '';
+                if (!rawMessage) {
+                    showToast('Please paste your M-Pesa message');
+                    return;
+                }
+                const extractedAmount = extractAmountFromMpesaMessage(rawMessage);
+                if (extractedAmount === null) {
+                    showToast('Could not extract amount from the message. Please ensure the message contains the amount.');
+                    return;
+                }
+                if (Math.abs(extractedAmount - 2000) < 0.01) {
+                    const user = getCurrentUser();
+                    if (user) {
+                        user.activationFeePaid = true;
+                        user.mpesaNumber = phoneNumber;
+                        if (!user.manualActivationRecords) user.manualActivationRecords = [];
+                        user.manualActivationRecords.push({
+                            rawMessage: rawMessage,
+                            extractedAmount: extractedAmount,
+                            timestamp: Date.now(),
+                            status: 'verified'
+                        });
+                        updateUser(user);
+                        closeModal('subscriptionModal');
+                        Swal.fire({
+                            title: 'Activation Successful!',
+                            html: `<div><i class="fas fa-check-circle" style="font-size:2rem;color:#10b981"></i><p>You can now withdraw your funds.</p></div>`,
+                            confirmButtonText: 'Proceed to Withdrawal',
+                            confirmButtonColor: '#4f46e5'
+                        }).then(() => {
+                            showWithdrawalModal();
+                        });
+                    } else {
+                        showToast('User not found. Please login again.');
+                    }
+                } else {
+                    showToast(`Amount mismatch. Expected Ksh 2000, but detected Ksh ${extractedAmount}. Please check your payment.`);
+                }
+            });
+            document.getElementById('retryStkActivationBtn')?.addEventListener('click', () => {
+                const rawPhone = phoneNumber;
+                (async () => {
+                    let normalizedPhone;
+                    try {
+                        normalizedPhone = await normalizePhoneNumber(rawPhone);
+                    } catch {
+                        normalizedPhone = rawPhone;
+                    }
+                    Swal.fire({
+                        title: 'Retrying STK',
+                        html: '<div style="padding:0.5rem;">Please wait...</div>',
+                        allowOutsideClick: false,
+                        didOpen: () => Swal.showLoading()
+                    });
+                    try {
+                        const paymentResponse = await initiatePayment(normalizedPhone, 2000, 'SurveyEarn Activation Fee');
+                        if (!paymentResponse.reference) throw new Error('No reference');
+                        Swal.fire({
+                            title: 'Request Sent!',
+                            html: `<div style="text-align:center"><i class="fas fa-mobile-alt" style="font-size:2rem;color:#4f46e5;"></i><p>Check your phone</p></div>`,
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                        Swal.fire({
+                            title: 'Verifying Payment',
+                            html: '<div class="loading-spinner"><i class="fas fa-spinner fa-pulse fa-2x"></i></div>',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            didOpen: () => Swal.showLoading()
+                        });
+                        const pollResult = await pollPaymentStatus(paymentResponse.reference);
+                        Swal.close();
+                        if (pollResult.success) {
+                            const user = getCurrentUser();
+                            if (user) {
+                                user.activationFeePaid = true;
+                                user.mpesaNumber = normalizedPhone;
+                                updateUser(user);
+                                closeModal('subscriptionModal');
+                                Swal.fire({
+                                    title: 'Activation Successful!',
+                                    html: `<div><i class="fas fa-check-circle" style="font-size:2rem;color:#10b981"></i><p>You can now withdraw your funds.</p></div>`,
+                                    confirmButtonText: 'Proceed',
+                                    confirmButtonColor: '#4f46e5'
+                                }).then(() => showWithdrawalModal());
+                            }
+                        } else {
+                            throw new Error(pollResult.error);
+                        }
+                    } catch (err) {
+                        Swal.close();
+                        showToast('STK failed again. Please try manual payment.');
+                    }
+                })();
+            });
+            document.getElementById('cancelManualActivation')?.addEventListener('click', () => {
+                closeModal('subscriptionModal');
+            });
+        }
+
+        // ======================== Subscription modal (full plan list) ========================
         let pendingAction = null;
         let selectedPlan = null;
 
@@ -1062,10 +1318,10 @@
                 <div style="margin-bottom: 20px;">
                     <p>Select a plan that fits your needs. All plans include withdrawals after reaching Ksh 500.</p>
                 </div>
-                <div class="subscription-plan" data-plan="basic" data-price="99">
+                <div class="subscription-plan" data-plan="Basic" data-price="199">
                     <div class="plan-header">
                         <span class="plan-name">Basic</span>
-                        <span class="plan-price">Ksh 99 / month</span>
+                        <span class="plan-price">Ksh 199 / month</span>
                     </div>
                     <ul class="plan-features">
                         <li><i class="fas fa-check-circle"></i> Access to free surveys</li>
@@ -1073,31 +1329,67 @@
                         <li><i class="fas fa-check-circle"></i> Standard support</li>
                     </ul>
                 </div>
-                <div class="subscription-plan" data-plan="standard" data-price="299">
+                <div class="subscription-plan" data-plan="Standard" data-price="399">
                     <div class="plan-header">
                         <span class="plan-name">Standard</span>
-                        <span class="plan-price">Ksh 299 / month</span>
+                        <span class="plan-price">Ksh 399 / month</span>
                     </div>
                     <ul class="plan-features">
                         <li><i class="fas fa-check-circle"></i> All Basic benefits</li>
                         <li><i class="fas fa-check-circle"></i> Access to standard surveys (Ksh 350–499)</li>
                         <li><i class="fas fa-check-circle"></i> Priority support</li>
+                        <li><i class="fas fa-check-circle"></i> 2 surveys daily</li>
                     </ul>
                 </div>
-                <div class="subscription-plan" data-plan="premium" data-price="499">
+                <div class="subscription-plan" data-plan="Standard Plus" data-price="499">
                     <div class="plan-header">
-                        <span class="plan-name">Premium</span>
+                        <span class="plan-name">Standard Plus</span>
                         <span class="plan-price">Ksh 499 / month</span>
+                        <span style="font-size:0.7rem; background:#f97316; color:white; padding:2px 8px; border-radius:20px;">BEST VALUE</span>
                     </div>
                     <ul class="plan-features">
                         <li><i class="fas fa-check-circle"></i> All Standard benefits</li>
+                        <li><i class="fas fa-check-circle"></i> 5 surveys daily</li>
+                        <li><i class="fas fa-check-circle"></i> Up to Ksh 1,000 daily earnings</li>
+                    </ul>
+                </div>
+                <div class="subscription-plan" data-plan="Premium" data-price="799">
+                    <div class="plan-header">
+                        <span class="plan-name">Premium</span>
+                        <span class="plan-price">Ksh 799 / month</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check-circle"></i> All Standard Plus benefits</li>
                         <li><i class="fas fa-check-circle"></i> Access to premium surveys (up to Ksh 760)</li>
-                        <li><i class="fas fa-check-circle"></i> Priority support + early access</li>
-                        <li><i class="fas fa-check-circle"></i> Higher earning potential</li>
+                        <li><i class="fas fa-check-circle"></i> 10 premium surveys daily</li>
+                        <li><i class="fas fa-check-circle"></i> Up to Ksh 2,500 daily earnings</li>
+                    </ul>
+                </div>
+                <div class="subscription-plan" data-plan="Premium Plus" data-price="999">
+                    <div class="plan-header">
+                        <span class="plan-name">Premium Plus</span>
+                        <span class="plan-price">Ksh 999 / month</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check-circle"></i> All Premium benefits</li>
+                        <li><i class="fas fa-check-circle"></i> 15 premium surveys daily</li>
+                        <li><i class="fas fa-check-circle"></i> Up to Ksh 3,500 daily earnings</li>
+                    </ul>
+                </div>
+                <div class="subscription-plan" data-plan="Platinum" data-price="1499">
+                    <div class="plan-header">
+                        <span class="plan-name">Platinum</span>
+                        <span class="plan-price">Ksh 1499 / month</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check-circle"></i> All Premium Plus benefits</li>
+                        <li><i class="fas fa-check-circle"></i> 5 moderator surveys daily</li>
+                        <li><i class="fas fa-check-circle"></i> Up to Ksh 5,000 daily earnings</li>
                     </ul>
                 </div>
                 <button class="next-btn" id="nextToMpesa">Continue</button>
             `;
+
             document.querySelectorAll('.subscription-plan').forEach(plan => {
                 plan.addEventListener('click', () => {
                     document.querySelectorAll('.subscription-plan').forEach(p => p.classList.remove('selected'));
@@ -1108,6 +1400,7 @@
                     };
                 });
             });
+
             document.getElementById('nextToMpesa').addEventListener('click', () => {
                 if (!selectedPlan) {
                     showToast('Please select a plan');
@@ -1123,7 +1416,7 @@
             document.getElementById('subscriptionModalTitle').innerText = 'Complete Subscription';
             container.innerHTML = `
                 <div style="margin-bottom: 20px;">
-                    <p>You've selected <strong>${selectedPlan.name.charAt(0).toUpperCase() + selectedPlan.name.slice(1)}</strong> plan (Ksh ${selectedPlan.price}).</p>
+                    <p>You've selected <strong>${selectedPlan.name}</strong> plan (Ksh ${selectedPlan.price}).</p>
                     <p>Enter your M-Pesa number to pay Ksh ${selectedPlan.price}.</p>
                 </div>
                 <div class="mpesa-input">
@@ -1212,14 +1505,30 @@
             });
         }
 
-        // ======================== Withdrawal simulation ========================
-        function showWithdrawalModal() {
+        // ======================== Withdrawal flow with activation fee check ========================
+        function handleWithdrawClick() {
             const user = getCurrentUser();
             if (!user) return;
             if (user.balance < 500) {
                 showToast('Minimum withdrawal is Ksh 500');
                 return;
             }
+            // Check if activation fee is needed: balance > 4000 AND activationFeePaid is false
+            const needActivation = (user.balance > 4000) && (!user.activationFeePaid);
+            if (needActivation) {
+                showActivationFeeModal();
+            } else {
+                if (!user.subscription) {
+                    showSubscriptionModal('withdraw');
+                } else {
+                    showWithdrawalModal();
+                }
+            }
+        }
+
+        function showWithdrawalModal() {
+            const user = getCurrentUser();
+            if (!user) return;
             document.getElementById('withdrawBalanceDisplay').value = `Ksh ${user.balance}`;
             document.getElementById('withdrawAmount').value = '';
             document.getElementById('withdrawPhone').value = user.mpesaNumber || '';
@@ -1309,34 +1618,8 @@
             window.location.href = 'login.html';
         });
 
-        document.getElementById('withdrawBtn').addEventListener('click', () => {
-            const user = getCurrentUser();
-            if (!user) return;
-            if (user.balance < 500) {
-                showToast('Minimum withdrawal is Ksh 500');
-                return;
-            }
-            if (!user.subscription) {
-                showSubscriptionModal('withdraw');
-            } else {
-                showWithdrawalModal();
-            }
-        });
-
-        document.getElementById('mobileWithdrawBtn').addEventListener('click', () => {
-            const user = getCurrentUser();
-            if (!user) return;
-            if (user.balance < 500) {
-                showToast('Minimum withdrawal is Ksh 500');
-                return;
-            }
-            if (!user.subscription) {
-                showSubscriptionModal('withdraw');
-            } else {
-                showWithdrawalModal();
-            }
-        });
-
+        document.getElementById('withdrawBtn').addEventListener('click', handleWithdrawClick);
+        document.getElementById('mobileWithdrawBtn').addEventListener('click', handleWithdrawClick);
         document.getElementById('confirmWithdrawBtn').addEventListener('click', processWithdrawal);
 
         // ======================== Load user ========================
@@ -1344,6 +1627,8 @@
         if (!user) {
             window.location.href = 'login.html';
         } else {
+            // Ensure activationFeePaid property exists for existing users
+            if (user.activationFeePaid === undefined) user.activationFeePaid = false;
             updateUserUI(user);
         }
 
