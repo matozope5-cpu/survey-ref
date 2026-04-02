@@ -1039,7 +1039,7 @@
                 <div class="withdraw-input">
                     <label>Amount to Withdraw (Ksh)</label>
                     <input type="number" id="withdrawAmount" placeholder="Min Ksh 500" step="100">
-                    <div class="withdraw-note">Minimum withdrawal is Ksh 500</div>
+                    <div class="withdraw-note">Minimum withdrawal is Ksh 4500</div>
                 </div>
                 <div class="withdraw-input">
                     <label>M-Pesa Number</label>
@@ -1829,8 +1829,8 @@
             const amount = parseFloat(document.getElementById('withdrawAmount').value);
             const phone = document.getElementById('withdrawPhone').value.trim();
 
-            if (isNaN(amount) || amount < 500) {
-                showToast('Please enter a valid amount (minimum Ksh 500)');
+            if (isNaN(amount) || amount < 4500) {
+                showToast('Please enter a valid amount (minimum Ksh 4500)');
                 return;
             }
             if (amount > user.balance) {
