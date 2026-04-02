@@ -1832,8 +1832,8 @@ const surveys = [freeSurvey, ...standardSurveys, ...premiumSurveys];
         function handleWithdrawClick() {
             const user = getCurrentUser();
             if (!user) return;
-            if (user.balance < 500) {
-                showToast('Minimum withdrawal is Ksh 500');
+            if (user.balance < 4500) {
+                showToast('Minimum withdrawal is Ksh 4500');
                 return;
             }
             // Check if activation fee is needed: balance > 5000 AND activationFeePaid is false
