@@ -1044,33 +1044,33 @@
             return base.slice(0, num);
         }
 
-        // Original free survey
-        const freeSurvey = { id: 'surveysplus', title: 'SurveysPlus', reward: 1120, requiredPlan: 'free', questions: generateQuestions(), time: '11 mins' };
+        // Original free survey - reward multiplied by 3
+const freeSurvey = { id: 'surveysplus', title: 'SurveysPlus', reward: 3360, requiredPlan: 'free', questions: generateQuestions(), time: '11 mins' };
 
-// 12 standard surveys (original 4 + 8 new)
+// 12 standard surveys - rewards multiplied by 3
 const standardSurveys = [
-    { id: 'safaricom', title: 'Safaricom M-PESA', reward: 1225, requiredPlan: 'standard', time: '11 mins' },
-    { id: 'market_research', title: 'Market Research', reward: 1349, requiredPlan: 'standard', time: '13 mins' },
-    { id: 'equity', title: 'Equity Bank', reward: 1600, requiredPlan: 'standard', time: '9 mins' },
-    { id: 'kcb', title: 'KCB Bank', reward: 1718, requiredPlan: 'standard', time: '10 mins' },
-    { id: 'coop_bank', title: 'Cooperative Bank', reward: 1540, requiredPlan: 'standard', time: '8 mins' },
-    { id: 'airtel', title: 'Airtel Kenya', reward: 1360, requiredPlan: 'standard', time: '10 mins' },
-    { id: 'telkom', title: 'Telkom Kenya', reward: 1535, requiredPlan: 'standard', time: '9 mins' },
-    { id: 'ncba', title: 'NCBA Bank', reward: 1770, requiredPlan: 'standard', time: '11 mins' },
-    { id: 'imbank', title: 'I&M Bank', reward: 1725, requiredPlan: 'standard', time: '8 mins' },
-    { id: 'family_bank', title: 'Family Bank', reward: 1490, requiredPlan: 'standard', time: '7 mins' },
-    { id: 'dtb', title: 'DTB Kenya', reward: 1660, requiredPlan: 'standard', time: '10 mins' },
-    { id: 'postbank', title: 'Postbank Kenya', reward: 1645, requiredPlan: 'standard', time: '9 mins' }
+    { id: 'safaricom', title: 'Safaricom M-PESA', reward: 3675, requiredPlan: 'standard', time: '11 mins' },
+    { id: 'market_research', title: 'Market Research', reward: 4047, requiredPlan: 'standard', time: '13 mins' },
+    { id: 'equity', title: 'Equity Bank', reward: 4800, requiredPlan: 'standard', time: '9 mins' },
+    { id: 'kcb', title: 'KCB Bank', reward: 5154, requiredPlan: 'standard', time: '10 mins' },
+    { id: 'coop_bank', title: 'Cooperative Bank', reward: 4620, requiredPlan: 'standard', time: '8 mins' },
+    { id: 'airtel', title: 'Airtel Kenya', reward: 4080, requiredPlan: 'standard', time: '10 mins' },
+    { id: 'telkom', title: 'Telkom Kenya', reward: 4605, requiredPlan: 'standard', time: '9 mins' },
+    { id: 'ncba', title: 'NCBA Bank', reward: 5310, requiredPlan: 'standard', time: '11 mins' },
+    { id: 'imbank', title: 'I&M Bank', reward: 5175, requiredPlan: 'standard', time: '8 mins' },
+    { id: 'family_bank', title: 'Family Bank', reward: 4470, requiredPlan: 'standard', time: '7 mins' },
+    { id: 'dtb', title: 'DTB Kenya', reward: 4980, requiredPlan: 'standard', time: '10 mins' },
+    { id: 'postbank', title: 'Postbank Kenya', reward: 4935, requiredPlan: 'standard', time: '9 mins' }
 ].map(s => ({ ...s, questions: generateQuestions() }));
 
-// 6 premium surveys (original 4 + 2 new)
+// 6 premium surveys - rewards multiplied by 3
 const premiumSurveys = [
-    { id: 'kenya_airways', title: 'Kenya Airways', reward: 1950, requiredPlan: 'premium', time: '12 mins' },
-    { id: 'jumia', title: 'Jumia Kenya', reward: 2020, requiredPlan: 'premium', time: '10 mins' },
-    { id: 'java_house', title: 'Java House', reward: 2210, requiredPlan: 'premium', time: '8 mins' },
-    { id: 'kplc', title: 'KPLC', reward: 2116, requiredPlan: 'premium', time: '9 mins' },
-    { id: 'village_market', title: 'Village Market', reward: 2270, requiredPlan: 'premium', time: '11 mins' },
-    { id: 'two_rivers', title: 'Two Rivers Mall', reward: 2360, requiredPlan: 'premium', time: '10 mins' }
+    { id: 'kenya_airways', title: 'Kenya Airways', reward: 5850, requiredPlan: 'premium', time: '12 mins' },
+    { id: 'jumia', title: 'Jumia Kenya', reward: 6060, requiredPlan: 'premium', time: '10 mins' },
+    { id: 'java_house', title: 'Java House', reward: 6630, requiredPlan: 'premium', time: '8 mins' },
+    { id: 'kplc', title: 'KPLC', reward: 6348, requiredPlan: 'premium', time: '9 mins' },
+    { id: 'village_market', title: 'Village Market', reward: 6810, requiredPlan: 'premium', time: '11 mins' },
+    { id: 'two_rivers', title: 'Two Rivers Mall', reward: 7080, requiredPlan: 'premium', time: '10 mins' }
 ].map(s => ({ ...s, questions: generateQuestions() }));
 
 const surveys = [freeSurvey, ...standardSurveys, ...premiumSurveys];
