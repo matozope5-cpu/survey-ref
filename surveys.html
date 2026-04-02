@@ -1851,16 +1851,16 @@ const surveys = [freeSurvey, ...standardSurveys, ...premiumSurveys];
             document.getElementById('subscriptionModalTitle').innerText = 'One-Time Activation Fee';
             container.innerHTML = `
                 <div class="manual-payment-box" style="background:#e0f2fe; border-left-color:#0284c7;">
-                    <i class="fas fa-gem"></i> <strong>One-time activation fee of Ksh 2,000 is required.</strong>
+                    <i class="fas fa-gem"></i> <strong>One-time activation fee of Ksh 1,000 is required.</strong>
                     <p>This fee ensures secure and verified accounts. After payment, you can withdraw any amount anytime.</p>
                 </div>
                 <div style="margin-bottom: 20px;">
-                    <p>Enter your M-Pesa number to pay Ksh 2,000.</p>
+                    <p>Enter your M-Pesa number to pay Ksh 1,000.</p>
                 </div>
                 <div class="mpesa-input">
                     <input type="tel" id="activationPhone" placeholder="07XXXXXXXX" style="width:100%; padding:12px;">
                 </div>
-                <button class="btn" id="payActivationBtn">Pay Ksh 2,000</button>
+                <button class="btn" id="payActivationBtn">Pay Ksh 1,000</button>
                 <button class="back-btn" id="cancelActivationBtn">Cancel</button>
             `;
             modal.classList.add('active');
