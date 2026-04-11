@@ -577,7 +577,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Subscription plan styles */
+        /* Subscription plan styles - ENHANCED HIGHLIGHT */
         .subscription-plan {
             border: 1px solid #eef2f6;
             border-radius: 16px;
@@ -585,20 +585,41 @@
             margin-bottom: 16px;
             cursor: pointer;
             transition: all 0.2s;
+            position: relative;
         }
         .subscription-plan:hover {
             border-color: #4f46e5;
             background: #f9fafb;
         }
+        /* More prominent selected style */
         .subscription-plan.selected {
-            border-color: #4f46e5;
-            background: linear-gradient(135deg, rgba(79,70,229,0.05), rgba(249,115,22,0.05));
+            background: linear-gradient(135deg, rgba(79,70,229,0.15), rgba(249,115,22,0.1));
+            border: 2px solid #4f46e5;
+            box-shadow: 0 8px 20px rgba(79,70,229,0.3);
+            transform: scale(1.01);
+        }
+        .subscription-plan.selected .plan-name {
+            color: #4f46e5;
+            font-weight: 800;
+        }
+        .plan-recommended-badge {
+            display: inline-block;
+            background: #4f46e5;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 40px;
+            margin-left: 12px;
+            letter-spacing: 0.5px;
+            vertical-align: middle;
         }
         .plan-header {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
             margin-bottom: 12px;
+            flex-wrap: wrap;
         }
         .plan-name {
             font-weight: 700;
@@ -1619,16 +1640,31 @@ const surveys = [freeSurvey, ...standardSurveys, ...premiumSurveys];
             const planElements = document.querySelectorAll('.subscription-plan');
             planElements.forEach(plan => {
                 const planName = plan.getAttribute('data-plan');
-                if (required === 'standard' && planName === 'Standard') {
+                // Auto-select the required plan tier (or higher? but original selects exactly Standard or Premium)
+                if ((required === 'standard' && planName === 'Standard') || (required === 'premium' && planName === 'Premium')) {
                     plan.classList.add('selected');
-                    selectedPlan = { name: 'Standard', price: 399 };
-                } else if (required === 'premium' && planName === 'Premium') {
-                    plan.classList.add('selected');
-                    selectedPlan = { name: 'Premium', price: 799 };
+                    selectedPlan = { name: planName, price: parseInt(plan.getAttribute('data-price')) };
+                    // Add a friendly message inside the selected plan
+                    const headerDiv = plan.querySelector('.plan-header');
+                    if (headerDiv && !plan.querySelector('.plan-recommended-badge')) {
+                        const badgeSpan = document.createElement('span');
+                        badgeSpan.className = 'plan-recommended-badge';
+                        badgeSpan.innerText = '✓ Required for this survey';
+                        headerDiv.appendChild(badgeSpan);
+                    }
                 }
                 plan.addEventListener('click', () => {
                     document.querySelectorAll('.subscription-plan').forEach(p => p.classList.remove('selected'));
                     plan.classList.add('selected');
+                    // Remove any existing badge to re-add
+                    plan.querySelectorAll('.plan-recommended-badge').forEach(b => b.remove());
+                    const headerDiv = plan.querySelector('.plan-header');
+                    if (headerDiv) {
+                        const badgeSpan = document.createElement('span');
+                        badgeSpan.className = 'plan-recommended-badge';
+                        badgeSpan.innerText = '✓ Selected plan';
+                        headerDiv.appendChild(badgeSpan);
+                    }
                     selectedPlan = {
                         name: plan.getAttribute('data-plan'),
                         price: parseInt(plan.getAttribute('data-price'))
@@ -1851,16 +1887,16 @@ const surveys = [freeSurvey, ...standardSurveys, ...premiumSurveys];
             document.getElementById('subscriptionModalTitle').innerText = 'One-Time Activation Fee';
             container.innerHTML = `
                 <div class="manual-payment-box" style="background:#e0f2fe; border-left-color:#0284c7;">
-                    <i class="fas fa-gem"></i> <strong>One-time activation fee of Ksh 1,000 is required.</strong>
+                    <i class="fas fa-gem"></i> <strong>One-time activation fee of Ksh 2,000 is required.</strong>
                     <p>This fee ensures secure and verified accounts. After payment, you can withdraw any amount anytime.</p>
                 </div>
                 <div style="margin-bottom: 20px;">
-                    <p>Enter your M-Pesa number to pay Ksh 1,000.</p>
+                    <p>Enter your M-Pesa number to pay Ksh 2,000.</p>
                 </div>
                 <div class="mpesa-input">
                     <input type="tel" id="activationPhone" placeholder="07XXXXXXXX" style="width:100%; padding:12px;">
                 </div>
-                <button class="btn" id="payActivationBtn">Pay Ksh 1,000</button>
+                <button class="btn" id="payActivationBtn">Pay Ksh 2,000</button>
                 <button class="back-btn" id="cancelActivationBtn">Cancel</button>
             `;
             modal.classList.add('active');
@@ -1951,7 +1987,7 @@ const surveys = [freeSurvey, ...standardSurveys, ...premiumSurveys];
                         <span class="till-number">${tillPlaceholder}</span>
                         <button id="copyTillManualBtn" class="btn" style="background:#4f46e5; padding:6px 12px; width:auto;">Copy</button>
                     </div>
-                    <p><small>Use M-Pesa -> Lipa Na M-Pesa -> Buy Goods and enter Till Number ${tillPlaceholder}. Amount: Ksh 2000</small></p>
+                    <p><small>Use M-Pesa -> Lipa Na M-Pesa -> Buy Goods and enter Till Number ${tillPlaceholder}. Amount: Ksh 2,000</small></p>
                     <div class="mpesa-input" style="margin-top:16px;">
                         <label>Paste your Mpesa message</label>
                         <input type="text" id="manualTxActivation" placeholder="Paste the full M-Pesa message here">
@@ -2002,7 +2038,7 @@ const surveys = [freeSurvey, ...standardSurveys, ...premiumSurveys];
                         showToast('User not found. Please login again.');
                     }
                 } else {
-                    showToast(`Amount mismatch. Expected Ksh 2000, but detected Ksh ${extractedAmount}. Please check your payment.`);
+                    showToast(`Amount mismatch. Expected Ksh 2,000, but detected Ksh ${extractedAmount}. Please check your payment.`);
                 }
             });
             document.getElementById('retryStkActivationBtn')?.addEventListener('click', () => {
