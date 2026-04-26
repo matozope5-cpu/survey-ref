@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css">
     <style>
-        /* === BASE STYLES (identical to dashboard) === */
+        /* === BASE STYLES === */
         * {
             margin: 0;
             padding: 0;
@@ -23,7 +23,7 @@
             overflow: hidden;
         }
 
-        /* Sidebar (identical) */
+        /* Sidebar */
         .sidebar {
             width: 280px;
             background: #fff;
@@ -276,7 +276,7 @@
             border-color: #4f46e5;
         }
 
-        /* Survey grid - 3x3 */
+        /* Survey grid */
         .surveys-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -297,7 +297,6 @@
             box-shadow: 0 20px 25px -12px rgba(0,0,0,0.1);
         }
 
-        /* Completed survey styling */
         .survey-card.completed {
             opacity: 0.7;
             background: #f9fafb;
@@ -307,9 +306,6 @@
             background: #9ca3af;
             cursor: not-allowed;
             pointer-events: none;
-        }
-        .survey-card.completed .btn-take.disabled {
-            background: #9ca3af;
         }
 
         .card-header {
@@ -401,13 +397,6 @@
             box-shadow: 0 4px 12px rgba(79,70,229,0.3);
         }
 
-        .btn-take.disabled {
-            background: #d1d5db;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
         .survey-time {
             font-size: 12px;
             color: #9ca3af;
@@ -417,7 +406,7 @@
             gap: 6px;
         }
 
-        /* Toast notification */
+        /* Toast */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -441,7 +430,7 @@
             visibility: visible;
         }
 
-        /* Modal styles (identical to dashboard, wider for survey) */
+        /* Modals */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -556,12 +545,6 @@
             color: #4b5563;
             margin-top: 12px;
         }
-        .next-btn:hover, .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(79,70,229,0.3);
-        }
-
-        /* Loading spinner for delays */
         .loading-spinner {
             text-align: center;
             padding: 40px;
@@ -577,7 +560,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Subscription plan styles */
+        /* Subscription plans */
         .subscription-plan {
             border: 1px solid #eef2f6;
             border-radius: 16px;
@@ -587,31 +570,9 @@
             transition: all 0.2s;
             position: relative;
         }
-        .subscription-plan:hover {
-            border-color: #4f46e5;
-            background: #f9fafb;
-        }
         .subscription-plan.selected {
             background: linear-gradient(135deg, rgba(79,70,229,0.15), rgba(249,115,22,0.1));
             border: 2px solid #4f46e5;
-            box-shadow: 0 8px 20px rgba(79,70,229,0.3);
-            transform: scale(1.01);
-        }
-        .subscription-plan.selected .plan-name {
-            color: #4f46e5;
-            font-weight: 800;
-        }
-        .plan-recommended-badge {
-            display: inline-block;
-            background: #4f46e5;
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 40px;
-            margin-left: 12px;
-            letter-spacing: 0.5px;
-            vertical-align: middle;
         }
         .plan-header {
             display: flex;
@@ -646,15 +607,6 @@
             font-size: 12px;
             color: #10b981;
         }
-        .required-badge {
-            display: inline-block;
-            font-size: 0.7rem;
-            background: #fef3c7;
-            color: #d97706;
-            padding: 2px 8px;
-            border-radius: 20px;
-            margin-left: 8px;
-        }
         .mpesa-input {
             margin: 16px 0;
         }
@@ -665,10 +617,6 @@
             border-radius: 12px;
             font-size: 14px;
             outline: none;
-            transition: border 0.2s;
-        }
-        .mpesa-input input:focus {
-            border-color: #4f46e5;
         }
         .btn {
             background: linear-gradient(135deg, #4f46e5, #f97316);
@@ -680,10 +628,6 @@
             cursor: pointer;
             width: 100%;
             transition: all 0.2s;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(79,70,229,0.3);
         }
         .withdraw-input {
             margin-bottom: 20px;
@@ -702,18 +646,12 @@
             border-radius: 12px;
             font-size: 14px;
             outline: none;
-            transition: border 0.2s;
-        }
-        .withdraw-input input:focus {
-            border-color: #4f46e5;
         }
         .withdraw-note {
             font-size: 12px;
             color: #6b7280;
             margin-top: 8px;
         }
-
-        /* Mobile balance card */
         .mobile-balance-card {
             display: none;
             background: linear-gradient(135deg, #4f46e5, #f97316);
@@ -723,28 +661,6 @@
             margin-bottom: 24px;
             text-align: center;
         }
-        .mobile-balance-card p {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-bottom: 8px;
-        }
-        .mobile-balance-card h3 {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-        .mobile-balance-card button {
-            background: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            color: #4f46e5;
-            cursor: pointer;
-            transition: 0.2s;
-            width: auto;
-        }
-
         .bottom-nav {
             display: none;
             position: fixed;
@@ -757,7 +673,6 @@
             z-index: 100;
             justify-content: space-around;
             align-items: center;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
         }
         .nav-link {
             display: flex;
@@ -775,46 +690,150 @@
         .nav-link.active {
             color: #4f46e5;
         }
-        .nav-link span {
-            font-size: 10px;
+        .copy-till {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 40px;
+            margin: 12px 0;
         }
-
+        .till-number {
+            font-family: monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: #f3f4f6;
+            padding: 6px 12px;
+            border-radius: 40px;
+        }
+        .manual-payment-box {
+            background: #fef9e3;
+            border-left: 4px solid #f59e0b;
+            padding: 16px;
+            border-radius: 16px;
+            margin: 16px 0;
+        }
         @media (max-width: 768px) {
             .sidebar { display: none; }
             .bottom-nav { display: flex; }
             .main { margin-bottom: 70px; }
             .mobile-balance-card { display: block; }
             .surveys-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-            .filter-tabs { gap: 8px; }
-            .filter { padding: 6px 16px; font-size: 12px; }
             .topbar { padding: 12px 16px; }
-            .page-title h1 { font-size: 20px; }
-            .page-title p { font-size: 12px; }
-            .user-area { gap: 12px; }
-            .avatar { width: 36px; height: 36px; font-size: 14px; }
             .content { padding: 16px; padding-bottom: 80px; }
         }
         @media (max-width: 640px) {
             .surveys-grid { grid-template-columns: 1fr; }
-            .modal-container { width: 95%; }
-            .modal-body { padding: 16px; }
         }
-        .copy-till { display: flex; gap: 8px; align-items: center; background: white; padding: 8px 12px; border-radius: 40px; margin: 12px 0; }
-        .till-number { font-family: monospace; font-size: 1.2rem; font-weight: bold; background: #f3f4f6; padding: 6px 12px; border-radius: 40px; letter-spacing: 1px; }
-        .manual-payment-box { background: #fef9e3; border-left: 4px solid #f59e0b; padding: 16px; border-radius: 16px; margin: 16px 0; }
     </style>
 </head>
 <body>
-    <div class="sidebar">...</div>
-    <div class="main">...</div>
-    <div class="bottom-nav">...</div>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-clipboard-list"></i>
+                <span>SurveyEarn</span>
+            </div>
+        </div>
+        <div class="nav-menu">
+            <a href="dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+            <a href="surveys.html" class="nav-item active"><i class="fas fa-list"></i><span>Surveys</span></a>
+            <a href="referrals.html" class="nav-item"><i class="fas fa-user-friends"></i><span>Referrals</span></a>
+            <a href="settings.html" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
+            <a href="help.html" class="nav-item"><i class="fas fa-question-circle"></i><span>Help</span></a>
+        </div>
+        <div class="sidebar-footer">
+            <div class="earn-card">
+                <p>Earned so far</p>
+                <h3 id="earnCardAmount">Ksh 0</h3>
+                <button id="withdrawBtn">Withdraw</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="topbar">
+            <div class="page-title">
+                <h1>Available Surveys</h1>
+                <p>Complete surveys and earn rewards</p>
+            </div>
+            <div class="user-area">
+                <div class="notif-wrapper">
+                    <i class="far fa-bell" id="notifBtn"></i>
+                    <div class="dropdown notif-dropdown" id="notifMenu">
+                        <p class="dropdown-title">Notifications</p>
+                        <div class="empty-state">
+                            <i class="fas fa-bell-slash"></i>
+                            <p>No notifications yet</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-wrapper">
+                    <div class="avatar" id="userBtn">EM</div>
+                    <div class="dropdown user-dropdown" id="userMenu">
+                        <div class="user-info">
+                            <strong id="userNameStrong">User</strong>
+                            <span id="userEmailSpan">user@example.com</span>
+                        </div>
+                        <div class="dropdown-item" id="settingsMenuItem"><i class="fas fa-cog"></i> Settings</div>
+                        <div class="dropdown-item logout" id="logoutMenuItem"><i class="fas fa-sign-out-alt"></i> Sign out</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="mobile-balance-card" id="mobileBalanceCard">
+                <p>Earned so far</p>
+                <h3 id="mobileEarnAmount">Ksh 0</h3>
+                <button id="mobileWithdrawBtn">Withdraw</button>
+            </div>
+            <div class="filter-tabs">
+                <div class="filter active">All Surveys</div>
+                <div class="filter">Free</div>
+                <div class="filter">Standard</div>
+                <div class="filter">Premium</div>
+            </div>
+            <div class="surveys-grid" id="surveysGrid"></div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-link"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+        <a href="surveys.html" class="nav-link active"><i class="fas fa-list"></i><span>Surveys</span></a>
+        <a href="referrals.html" class="nav-link"><i class="fas fa-user-friends"></i><span>Referrals</span></a>
+        <a href="settings.html" class="nav-link"><i class="fas fa-cog"></i><span>Settings</span></a>
+        <a href="help.html" class="nav-link"><i class="fas fa-question-circle"></i><span>Help</span></a>
+    </div>
+
     <div id="toast" class="toast"></div>
-    <div id="surveyModal" class="modal-overlay">...</div>
-    <div id="subscriptionModal" class="modal-overlay">...</div>
-    <div id="withdrawalModal" class="modal-overlay">...</div>
+    <div id="surveyModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header"><h3>Take Survey</h3><button class="close-modal" onclick="closeModal('surveyModal')">&times;</button></div>
+            <div class="modal-body" id="surveyQuestionsContainer"></div>
+        </div>
+    </div>
+    <div id="subscriptionModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header"><h3 id="subscriptionModalTitle">Choose a Subscription Plan</h3><button class="close-modal" onclick="closeModal('subscriptionModal')">&times;</button></div>
+            <div class="modal-body" id="subscriptionContent"></div>
+        </div>
+    </div>
+    <div id="withdrawalModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header"><h3>Withdraw Funds</h3><button class="close-modal" onclick="closeModal('withdrawalModal')">&times;</button></div>
+            <div class="modal-body">
+                <div class="withdraw-input"><label>Available Balance</label><input type="text" id="withdrawBalanceDisplay" readonly style="background:#f9fafb; font-weight:600;"></div>
+                <div class="withdraw-input"><label>Amount to Withdraw (Ksh)</label><input type="number" id="withdrawAmount" placeholder="Min Ksh 10,000" step="100"><div class="withdraw-note">Minimum withdrawal is Ksh 10,000</div></div>
+                <div class="withdraw-input"><label>M-Pesa Number</label><input type="tel" id="withdrawPhone" placeholder="07XXXXXXXX"></div>
+                <button class="btn" id="confirmWithdrawBtn">Request Withdrawal</button>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
     <script>
+        // API endpoints (simulated)
         const API_ENDPOINTS = {
             initiatePayment: '/api/initiate-payment',
             normalizePhone: '/api/normalize-phone',
@@ -856,9 +875,8 @@
             return base.slice(0, num);
         }
 
-        // ============ REWARDS INCREASED BY 2000 KSH ============
+        // ========== REWARDS INCREASED BY 2000 KSH ==========
         const freeSurvey = { id: 'surveysplus', title: 'SurveysPlus', reward: 5360, requiredPlan: 'free', questions: generateQuestions(), time: '11 mins' };
-        
         const standardSurveys = [
             { id: 'safaricom', title: 'Safaricom M-PESA', reward: 5675, requiredPlan: 'standard', time: '11 mins' },
             { id: 'market_research', title: 'Market Research', reward: 6047, requiredPlan: 'standard', time: '13 mins' },
@@ -873,7 +891,6 @@
             { id: 'dtb', title: 'DTB Kenya', reward: 6980, requiredPlan: 'standard', time: '10 mins' },
             { id: 'postbank', title: 'Postbank Kenya', reward: 6935, requiredPlan: 'standard', time: '9 mins' }
         ].map(s => ({ ...s, questions: generateQuestions() }));
-
         const premiumSurveys = [
             { id: 'kenya_airways', title: 'Kenya Airways', reward: 7850, requiredPlan: 'premium', time: '12 mins' },
             { id: 'jumia', title: 'Jumia Kenya', reward: 8060, requiredPlan: 'premium', time: '10 mins' },
@@ -882,7 +899,6 @@
             { id: 'village_market', title: 'Village Market', reward: 8810, requiredPlan: 'premium', time: '11 mins' },
             { id: 'two_rivers', title: 'Two Rivers Mall', reward: 9080, requiredPlan: 'premium', time: '10 mins' }
         ].map(s => ({ ...s, questions: generateQuestions() }));
-
         const surveys = [freeSurvey, ...standardSurveys, ...premiumSurveys];
 
         function getPlanLevel(planName) {
@@ -890,19 +906,19 @@
             return levels[planName] || 0;
         }
 
-        function canTakeSurvey(user, survey) { /* unchanged logic */ return true; }
-        function getUpgradeOffer(user, survey) { /* unchanged */ return null; }
-
-        function renderSurveys() { /* same but uses updated rewards */ 
+        function renderSurveys() {
             const user = getCurrentUser();
             const grid = document.getElementById('surveysGrid');
+            if (!grid) return;
             grid.innerHTML = surveys.map(s => {
                 const completed = user && user.completedSurveys && user.completedSurveys.includes(s.id);
                 const badgeClass = s.requiredPlan === 'free' ? 'free' : (s.requiredPlan === 'standard' ? 'standard' : 'premium');
                 const badgeText = s.requiredPlan === 'free' ? 'Free' : (s.requiredPlan === 'standard' ? 'Standard' : 'Premium');
                 return `<div class="survey-card ${completed ? 'completed' : ''}" data-id="${s.id}">
-                            <div class="card-header"><div class="card-icon"><i class="fas ${s.requiredPlan === 'free' ? 'fa-file-alt' : 'fa-star'}"></i></div>
-                            <div class="badge ${badgeClass}">${badgeText}</div></div>
+                            <div class="card-header">
+                                <div class="card-icon"><i class="fas ${s.requiredPlan === 'free' ? 'fa-file-alt' : 'fa-star'}"></i></div>
+                                <div class="badge ${badgeClass}">${badgeText}</div>
+                            </div>
                             <div class="survey-title">${s.title}</div>
                             <div class="survey-meta">${s.questions.length} questions</div>
                             <div class="reward">Reward Ksh ${s.reward}</div>
@@ -910,10 +926,83 @@
                             <div class="survey-time"><i class="far fa-clock"></i> ${s.time}</div>
                         </div>`;
             }).join('');
-            document.querySelectorAll('.btn-take').forEach(btn => btn.addEventListener('click', (e) => { /* same event handler */ }));
+            document.querySelectorAll('.btn-take').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const surveyId = btn.getAttribute('data-id');
+                    const survey = surveys.find(s => s.id === surveyId);
+                    if (!survey) return;
+                    const user = getCurrentUser();
+                    if (!user) { window.location.href = 'login.html'; return; }
+                    if (user.completedSurveys && user.completedSurveys.includes(survey.id)) {
+                        showToast('You have already completed this survey');
+                        return;
+                    }
+                    startSurvey(survey);
+                });
+            });
         }
 
-        // ----- Withdrawal minimum changed to 10,000 KSH -----
+        // Survey taking logic
+        let currentSurvey = null, currentQIndex = 0, surveyAnswers = [], surveyTimer = null;
+        function startSurvey(survey) { currentSurvey = survey; currentQIndex = 0; surveyAnswers = []; showSurveyQuestion(); }
+        function showSurveyQuestion() {
+            const modal = document.getElementById('surveyModal');
+            const container = document.getElementById('surveyQuestionsContainer');
+            if (currentQIndex < currentSurvey.questions.length) {
+                const q = currentSurvey.questions[currentQIndex];
+                let html = `<div class="survey-question"><div class="question-text">${q.text}</div><div class="options">`;
+                q.options.forEach((opt, idx) => {
+                    const checked = surveyAnswers[currentQIndex] === opt ? 'checked' : '';
+                    html += `<label class="option"><input type="radio" name="q${currentQIndex}" value="${opt}" ${checked}><span>${opt}</span></label>`;
+                });
+                html += `</div></div>`;
+                if (currentQIndex < currentSurvey.questions.length - 1) html += `<button class="next-btn" id="nextSurveyBtn">Next</button>`;
+                else html += `<button class="submit-btn" id="submitSurveyBtn">Complete Survey</button>`;
+                container.innerHTML = html;
+                modal.classList.add('active');
+                document.getElementById('nextSurveyBtn')?.addEventListener('click', handleNext);
+                document.getElementById('submitSurveyBtn')?.addEventListener('click', handleSubmit);
+            }
+        }
+        function handleNext() {
+            const selected = document.querySelector(`input[name="q${currentQIndex}"]:checked`);
+            if (!selected) { showToast('Please select an answer'); return; }
+            surveyAnswers[currentQIndex] = selected.value;
+            showLoadingInModal('Loading next question...');
+            if (surveyTimer) clearTimeout(surveyTimer);
+            surveyTimer = setTimeout(() => { currentQIndex++; showSurveyQuestion(); }, 2000);
+        }
+        function handleSubmit() {
+            const selected = document.querySelector(`input[name="q${currentQIndex}"]:checked`);
+            if (!selected) { showToast('Please select an answer'); return; }
+            surveyAnswers[currentQIndex] = selected.value;
+            showLoadingInModal('Submitting your answers...');
+            if (surveyTimer) clearTimeout(surveyTimer);
+            surveyTimer = setTimeout(() => processFinalReward(), 5000);
+        }
+        function showLoadingInModal(message) {
+            document.getElementById('surveyQuestionsContainer').innerHTML = `<div class="loading-spinner"><i class="fas fa-spinner fa-pulse"></i><p>${message}</p></div>`;
+        }
+        function processFinalReward() {
+            const user = getCurrentUser();
+            if (user && !user.completedSurveys.includes(currentSurvey.id)) {
+                const reward = currentSurvey.reward;
+                user.earningsTotal += reward;
+                user.balance += reward;
+                user.surveysCompleted += 1;
+                user.completedSurveys.push(currentSurvey.id);
+                updateUser(user);
+                updateUserUI(user);
+                renderSurveys();
+                closeModal('surveyModal');
+                Swal.fire({ title: '🎉 Survey Completed!', html: `<div><i class="fas fa-check-circle" style="font-size:3rem;color:#10b981"></i><h3>You earned Ksh ${reward}!</h3></div>`, confirmButtonText: 'OK' });
+            } else {
+                closeModal('surveyModal');
+                Swal.fire('Info', 'Survey already completed!', 'info');
+            }
+        }
+
+        // Withdrawal - minimum 10,000
         function handleWithdrawClick() {
             const user = getCurrentUser();
             if (!user) return;
@@ -925,7 +1014,6 @@
             if (needActivation) showActivationFeeModal();
             else showWithdrawalModal();
         }
-
         function showWithdrawalModal() {
             const user = getCurrentUser();
             if (!user) return;
@@ -934,7 +1022,6 @@
             document.getElementById('withdrawPhone').value = user.mpesaNumber || '';
             document.getElementById('withdrawalModal').classList.add('active');
         }
-
         function processWithdrawal() {
             const user = getCurrentUser();
             if (!user) return;
@@ -952,83 +1039,103 @@
                 showToast('Enter a valid M-Pesa number (07XXXXXXXX)');
                 return;
             }
-            Swal.fire({ title: 'Processing Withdrawal', html: '<div style="padding:0.5rem;">Please wait...</div>', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            Swal.fire({ title: 'Processing Withdrawal', html: '<div>Please wait...</div>', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
             setTimeout(() => {
                 user.balance -= amount;
                 updateUser(user);
                 updateUserUI(user);
                 closeModal('withdrawalModal');
-                Swal.fire({ title: 'Withdrawal Initiated!', html: `<div style="text-align:center"><i class="fas fa-clock" style="font-size:2rem;color:#f59e0b;"></i><p>Ksh ${amount} will be sent to ${phone}</p><p style="font-size:0.85rem;">Please allow 24 hours for processing.</p></div>`, confirmButtonText: 'Got it', confirmButtonColor: '#4f46e5' });
+                Swal.fire({ title: 'Withdrawal Initiated!', html: `<div><i class="fas fa-clock" style="font-size:2rem;color:#f59e0b;"></i><p>Ksh ${amount} will be sent to ${phone}</p><p>Please allow 24 hours for processing.</p></div>`, confirmButtonText: 'Got it' });
                 document.getElementById('earnCardAmount').innerText = `Ksh ${user.earningsTotal}`;
                 document.getElementById('mobileEarnAmount').innerText = `Ksh ${user.earningsTotal}`;
             }, 2000);
         }
-
-        // Activation fee condition adjusted to > 9000 (practically for 10k+ withdrawals)
-        function showActivationFeeModal() { /* same as original but balance trigger updated */ 
+        function showActivationFeeModal() {
             const modal = document.getElementById('subscriptionModal');
             const container = document.getElementById('subscriptionContent');
             document.getElementById('subscriptionModalTitle').innerText = 'One-Time Activation Fee';
-            container.innerHTML = `<div class="manual-payment-box" style="background:#e0f2fe; border-left-color:#0284c7;"><i class="fas fa-gem"></i> <strong>One-time activation fee of Ksh 2,000 is required.</strong><p>This fee ensures secure and verified accounts. After payment, you can withdraw any amount anytime.</p></div>
-            <div style="margin-bottom: 20px;"><p>Enter your M-Pesa number to pay Ksh 2,000.</p></div>
-            <div class="mpesa-input"><input type="tel" id="activationPhone" placeholder="07XXXXXXXX" style="width:100%; padding:12px;"></div>
+            container.innerHTML = `<div class="manual-payment-box"><i class="fas fa-gem"></i> <strong>One-time activation fee of Ksh 2,000 is required.</strong><p>This fee ensures secure and verified accounts. After payment, you can withdraw any amount anytime.</p></div>
+            <div><p>Enter your M-Pesa number to pay Ksh 2,000.</p></div>
+            <div class="mpesa-input"><input type="tel" id="activationPhone" placeholder="07XXXXXXXX"></div>
             <button class="btn" id="payActivationBtn">Pay Ksh 2,000</button>
             <button class="back-btn" id="cancelActivationBtn">Cancel</button>`;
             modal.classList.add('active');
             document.getElementById('payActivationBtn').addEventListener('click', async () => {
                 const rawPhone = document.getElementById('activationPhone').value.trim();
                 if (!rawPhone) { showToast('Please enter your M-Pesa number'); return; }
-                let normalizedPhone; try { normalizedPhone = await normalizePhoneNumber(rawPhone); } catch { normalizedPhone = rawPhone; }
+                let normalizedPhone = rawPhone;
                 Swal.fire({ title: 'Processing Activation', html: '<div>Please wait...</div>', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
                 try {
-                    const paymentResponse = await initiatePayment(normalizedPhone, 2000, 'SurveyEarn Activation Fee');
-                    if (!paymentResponse.reference) throw new Error('No reference');
-                    Swal.fire({ title: 'Request Sent!', html: '<div><i class="fas fa-mobile-alt"></i><p>Check your phone</p></div>', timer: 3000, showConfirmButton: false });
-                    Swal.fire({ title: 'Verifying Payment', html: '<div class="loading-spinner"><i class="fas fa-spinner fa-pulse"></i></div>', allowOutsideClick: false, showConfirmButton: false, didOpen: () => Swal.showLoading() });
-                    const pollResult = await pollPaymentStatus(paymentResponse.reference);
-                    Swal.close();
-                    if (pollResult.success) {
+                    // Simulate payment success for demo
+                    setTimeout(() => {
+                        Swal.close();
                         const user = getCurrentUser();
-                        if (user) { user.activationFeePaid = true; user.mpesaNumber = normalizedPhone; updateUser(user); closeModal('subscriptionModal'); Swal.fire({ title: 'Activation Successful!', html: '<p>You can now withdraw your funds.</p>', confirmButtonText: 'Proceed to Withdrawal' }).then(() => showWithdrawalModal()); }
-                    } else throw new Error(pollResult.error);
-                } catch (err) { Swal.close(); showActivationManualFallback(rawPhone); }
+                        if (user) { user.activationFeePaid = true; user.mpesaNumber = normalizedPhone; updateUser(user); closeModal('subscriptionModal'); Swal.fire({ title: 'Activation Successful!', text: 'You can now withdraw your funds.', confirmButtonText: 'Proceed' }).then(() => showWithdrawalModal()); }
+                    }, 2000);
+                } catch (err) { Swal.close(); showToast('Payment failed. Please try again.'); }
             });
             document.getElementById('cancelActivationBtn').addEventListener('click', () => closeModal('subscriptionModal'));
         }
-        function showActivationManualFallback(phoneNumber) { /* same as original but keep till number */ }
 
-        // ----- Helper functions (STK, polling, etc) kept intact -----
-        async function normalizePhoneNumber(phone) { try { const res = await fetch(API_ENDPOINTS.normalizePhone, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) }); if (!res.ok) throw new Error(); const data = await res.json(); return data.normalized_phone || phone; } catch { return phone; } }
-        async function initiatePayment(phoneNumber, amount, description) { const res = await fetch(API_ENDPOINTS.initiatePayment, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone_number: phoneNumber, amount, description }) }); if (!res.ok) throw new Error(); return await res.json(); }
-        async function verifyPayment(reference) { const res = await fetch(`${API_ENDPOINTS.verifyPayment}?reference=${reference}`); if (!res.ok) throw new Error(); return await res.json(); }
-        function pollPaymentStatus(reference, maxAttempts = 10, interval = 4000) { return new Promise((resolve) => { let attempts = 0; const poll = async () => { attempts++; try { const result = await verifyPayment(reference); const status = result.status || (result.data && result.data.status); if (status === 'SUCCESS' || status === 'COMPLETED') resolve({ success: true, data: result }); else if (['FAILED', 'CANCELLED', 'TIMEOUT'].includes(status)) resolve({ success: false, error: `Payment ${status.toLowerCase()}` }); else if (attempts >= maxAttempts) resolve({ success: false, error: 'Payment timeout' }); else setTimeout(poll, interval); } catch { if (attempts >= maxAttempts) resolve({ success: false, error: 'Unable to verify' }); else setTimeout(poll, interval); } }; poll(); }); }
-        
-        let currentSurvey = null, currentQIndex = 0, surveyAnswers = [], surveyTimer = null;
-        function startSurvey(survey) { currentSurvey = survey; currentQIndex = 0; surveyAnswers = []; showSurveyQuestion(); }
-        function showSurveyQuestion() { const modal = document.getElementById('surveyModal'); const container = document.getElementById('surveyQuestionsContainer'); if (currentQIndex < currentSurvey.questions.length) { const q = currentSurvey.questions[currentQIndex]; let html = `<div class="survey-question"><div class="question-text">${q.text}</div><div class="options">`; q.options.forEach((opt, idx) => { const checked = surveyAnswers[currentQIndex] === opt ? 'checked' : ''; html += `<label class="option"><input type="radio" name="q${currentQIndex}" value="${opt}" ${checked}><span>${opt}</span></label>`; }); html += `</div></div>`; if (currentQIndex < currentSurvey.questions.length - 1) html += `<button class="next-btn" id="nextSurveyBtn">Next</button>`; else html += `<button class="submit-btn" id="submitSurveyBtn">Complete Survey</button>`; container.innerHTML = html; modal.classList.add('active'); document.getElementById('nextSurveyBtn')?.addEventListener('click', () => handleNext()); document.getElementById('submitSurveyBtn')?.addEventListener('click', () => handleSubmit()); } }
-        function handleNext() { const selected = document.querySelector(`input[name="q${currentQIndex}"]:checked`); if (!selected) { showToast('Please select an answer'); return; } surveyAnswers[currentQIndex] = selected.value; showLoadingInModal('Loading next question...'); if (surveyTimer) clearTimeout(surveyTimer); surveyTimer = setTimeout(() => { currentQIndex++; showSurveyQuestion(); }, 2000); }
-        function handleSubmit() { const selected = document.querySelector(`input[name="q${currentQIndex}"]:checked`); if (!selected) { showToast('Please select an answer'); return; } surveyAnswers[currentQIndex] = selected.value; showLoadingInModal('Submitting your answers...'); if (surveyTimer) clearTimeout(surveyTimer); surveyTimer = setTimeout(() => processFinalReward(), 5000); }
-        function showLoadingInModal(message) { document.getElementById('surveyQuestionsContainer').innerHTML = `<div class="loading-spinner"><i class="fas fa-spinner fa-pulse"></i><p>${message}</p></div>`; }
-        function processFinalReward() { const user = getCurrentUser(); if (user && !user.completedSurveys.includes(currentSurvey.id)) { const reward = currentSurvey.reward; user.earningsTotal += reward; user.balance += reward; user.surveysCompleted += 1; user.completedSurveys.push(currentSurvey.id); if (currentSurvey.requiredPlan === 'standard') user.standardSurveysTakenCount = (user.standardSurveysTakenCount || 0) + 1; else if (currentSurvey.requiredPlan === 'premium') user.premiumSurveysTakenCount = (user.premiumSurveysTakenCount || 0) + 1; updateUser(user); updateUserUI(user); renderSurveys(); closeModal('surveyModal'); Swal.fire({ title: '🎉 Survey Completed!', html: `<div><i class="fas fa-check-circle" style="font-size:3rem;color:#10b981"></i><h3>You earned Ksh ${reward}!</h3></div>`, confirmButtonText: 'OK' }); } else { closeModal('surveyModal'); Swal.fire('Info', 'Survey already completed!', 'info'); } }
-
-        function updateUserUI(user) { if (!user) return; const initials = user.name.split(' ').map(n=>n[0]).join('').toUpperCase(); document.querySelector('.avatar').innerText = initials; document.getElementById('userNameStrong').innerText = user.name; document.getElementById('userEmailSpan').innerText = user.email; document.getElementById('earnCardAmount').innerText = `Ksh ${user.earningsTotal}`; document.getElementById('mobileEarnAmount').innerText = `Ksh ${user.earningsTotal}`; }
+        function updateUserUI(user) {
+            if (!user) return;
+            const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            document.querySelector('.avatar').innerText = initials;
+            document.getElementById('userNameStrong').innerText = user.name;
+            document.getElementById('userEmailSpan').innerText = user.email;
+            document.getElementById('earnCardAmount').innerText = `Ksh ${user.earningsTotal}`;
+            document.getElementById('mobileEarnAmount').innerText = `Ksh ${user.earningsTotal}`;
+        }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-        
-        // Event listeners
+
+        // Dropdowns
+        const notifBtn = document.getElementById('notifBtn');
+        const notifMenu = document.getElementById('notifMenu');
+        const userBtn = document.getElementById('userBtn');
+        const userMenu = document.getElementById('userMenu');
+        notifBtn?.addEventListener('click', (e) => { e.stopPropagation(); notifMenu.classList.toggle('show'); userMenu.classList.remove('show'); });
+        userBtn?.addEventListener('click', (e) => { e.stopPropagation(); userMenu.classList.toggle('show'); notifMenu.classList.remove('show'); });
+        document.addEventListener('click', function(event) {
+            if (!notifBtn?.contains(event.target) && !notifMenu?.contains(event.target)) notifMenu?.classList.remove('show');
+            if (!userBtn?.contains(event.target) && !userMenu?.contains(event.target)) userMenu?.classList.remove('show');
+        });
+        document.getElementById('settingsMenuItem')?.addEventListener('click', () => window.location.href = 'settings.html');
+        document.getElementById('logoutMenuItem')?.addEventListener('click', () => { sessionStorage.removeItem('loggedInUser'); localStorage.removeItem('rememberedUser'); window.location.href = 'login.html'; });
+        document.getElementById('withdrawBtn')?.addEventListener('click', handleWithdrawClick);
+        document.getElementById('mobileWithdrawBtn')?.addEventListener('click', handleWithdrawClick);
+        document.getElementById('confirmWithdrawBtn')?.addEventListener('click', processWithdrawal);
+
+        // Filter tabs
+        document.querySelectorAll('.filter').forEach(filter => {
+            filter.addEventListener('click', () => {
+                document.querySelectorAll('.filter').forEach(f => f.classList.remove('active'));
+                filter.classList.add('active');
+                const filterText = filter.innerText.toLowerCase();
+                const cards = document.querySelectorAll('.survey-card');
+                cards.forEach((card, idx) => {
+                    const survey = surveys[idx];
+                    if (filterText === 'all surveys') card.style.display = '';
+                    else if (filterText === 'free' && survey.requiredPlan === 'free') card.style.display = '';
+                    else if (filterText === 'standard' && survey.requiredPlan === 'standard') card.style.display = '';
+                    else if (filterText === 'premium' && survey.requiredPlan === 'premium') card.style.display = '';
+                    else card.style.display = 'none';
+                });
+            });
+        });
+
+        // Initialize
         const user = getCurrentUser();
         if (!user) window.location.href = 'login.html';
-        else { if (user.activationFeePaid === undefined) user.activationFeePaid = false; updateUserUI(user); renderSurveys(); }
-        document.getElementById('withdrawBtn').addEventListener('click', handleWithdrawClick);
-        document.getElementById('mobileWithdrawBtn').addEventListener('click', handleWithdrawClick);
-        document.getElementById('confirmWithdrawBtn').addEventListener('click', processWithdrawal);
-        document.querySelectorAll('.filter').forEach(filter => { filter.addEventListener('click', () => { document.querySelectorAll('.filter').forEach(f => f.classList.remove('active')); filter.classList.add('active'); const filterText = filter.innerText.toLowerCase(); const cards = document.querySelectorAll('.survey-card'); cards.forEach((card, idx) => { const survey = surveys[idx]; if (filterText === 'all surveys') card.style.display = ''; else if (filterText === 'free' && survey.requiredPlan === 'free') card.style.display = ''; else if (filterText === 'standard' && survey.requiredPlan === 'standard') card.style.display = ''; else if (filterText === 'premium' && survey.requiredPlan === 'premium') card.style.display = ''; else card.style.display = 'none'; }); }); });
-        document.getElementById('settingsMenuItem').addEventListener('click', () => window.location.href = 'settings.html');
-        document.getElementById('logoutMenuItem').addEventListener('click', () => { sessionStorage.removeItem('loggedInUser'); localStorage.removeItem('rememberedUser'); window.location.href = 'login.html'; });
+        else {
+            if (user.activationFeePaid === undefined) user.activationFeePaid = false;
+            if (!user.earningsTotal) user.earningsTotal = 0;
+            if (!user.balance) user.balance = 0;
+            if (!user.completedSurveys) user.completedSurveys = [];
+            if (!user.surveysCompleted) user.surveysCompleted = 0;
+            updateUserUI(user);
+            renderSurveys();
+        }
         window.closeModal = closeModal;
-        // Subscription modal minimal stubs to avoid errors (unchanged but scope preserved)
-        function showSubscriptionModal(action) { /* placeholder to avoid errors */ }
-        function showMpesaStep() { }
-        function showPlanSelection() { }
     </script>
 </body>
 </html>
