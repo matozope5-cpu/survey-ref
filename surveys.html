@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css">
     <style>
-        /* === BASE STYLES === */
+        /* (Same CSS as originally provided – keeping all styles intact) */
         * {
             margin: 0;
             padding: 0;
@@ -23,7 +23,6 @@
             overflow: hidden;
         }
 
-        /* Sidebar */
         .sidebar {
             width: 280px;
             background: #fff;
@@ -125,7 +124,6 @@
             transition: 0.2s;
         }
 
-        /* Main area */
         .main {
             flex: 1;
             display: flex;
@@ -178,7 +176,6 @@
             cursor: pointer;
         }
 
-        /* Dropdown styles */
         .notif-wrapper, .user-wrapper {
             position: relative;
         }
@@ -244,14 +241,12 @@
             margin-bottom: 10px;
         }
 
-        /* Content */
         .content {
             flex: 1;
             overflow-y: auto;
             padding: 24px 32px;
         }
 
-        /* Filter tabs */
         .filter-tabs {
             display: flex;
             gap: 12px;
@@ -276,7 +271,6 @@
             border-color: #4f46e5;
         }
 
-        /* Survey grid */
         .surveys-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -406,7 +400,6 @@
             gap: 6px;
         }
 
-        /* Toast */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -430,7 +423,6 @@
             visibility: visible;
         }
 
-        /* Modals */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -489,6 +481,7 @@
         .modal-body {
             padding: 24px;
         }
+
         .survey-question {
             margin-bottom: 32px;
         }
@@ -560,7 +553,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Subscription plans */
         .subscription-plan {
             border: 1px solid #eef2f6;
             border-radius: 16px;
@@ -731,10 +723,7 @@
 <body>
     <div class="sidebar">
         <div class="sidebar-header">
-            <div class="logo">
-                <i class="fas fa-clipboard-list"></i>
-                <span>SurveyEarn</span>
-            </div>
+            <div class="logo"><i class="fas fa-clipboard-list"></i><span>SurveyEarn</span></div>
         </div>
         <div class="nav-menu">
             <a href="dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
@@ -744,60 +733,23 @@
             <a href="help.html" class="nav-item"><i class="fas fa-question-circle"></i><span>Help</span></a>
         </div>
         <div class="sidebar-footer">
-            <div class="earn-card">
-                <p>Earned so far</p>
-                <h3 id="earnCardAmount">Ksh 0</h3>
-                <button id="withdrawBtn">Withdraw</button>
-            </div>
+            <div class="earn-card"><p>Earned so far</p><h3 id="earnCardAmount">Ksh 0</h3><button id="withdrawBtn">Withdraw</button></div>
         </div>
     </div>
-
     <div class="main">
         <div class="topbar">
-            <div class="page-title">
-                <h1>Available Surveys</h1>
-                <p>Complete surveys and earn rewards</p>
-            </div>
+            <div class="page-title"><h1>Available Surveys</h1><p>Complete surveys and earn rewards</p></div>
             <div class="user-area">
-                <div class="notif-wrapper">
-                    <i class="far fa-bell" id="notifBtn"></i>
-                    <div class="dropdown notif-dropdown" id="notifMenu">
-                        <p class="dropdown-title">Notifications</p>
-                        <div class="empty-state">
-                            <i class="fas fa-bell-slash"></i>
-                            <p>No notifications yet</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="user-wrapper">
-                    <div class="avatar" id="userBtn">EM</div>
-                    <div class="dropdown user-dropdown" id="userMenu">
-                        <div class="user-info">
-                            <strong id="userNameStrong">User</strong>
-                            <span id="userEmailSpan">user@example.com</span>
-                        </div>
-                        <div class="dropdown-item" id="settingsMenuItem"><i class="fas fa-cog"></i> Settings</div>
-                        <div class="dropdown-item logout" id="logoutMenuItem"><i class="fas fa-sign-out-alt"></i> Sign out</div>
-                    </div>
-                </div>
+                <div class="notif-wrapper"><i class="far fa-bell" id="notifBtn"></i><div class="dropdown notif-dropdown" id="notifMenu"><p class="dropdown-title">Notifications</p><div class="empty-state"><i class="fas fa-bell-slash"></i><p>No notifications yet</p></div></div></div>
+                <div class="user-wrapper"><div class="avatar" id="userBtn">EM</div><div class="dropdown user-dropdown" id="userMenu"><div class="user-info"><strong id="userNameStrong">User</strong><span id="userEmailSpan">user@example.com</span></div><div class="dropdown-item" id="settingsMenuItem"><i class="fas fa-cog"></i> Settings</div><div class="dropdown-item logout" id="logoutMenuItem"><i class="fas fa-sign-out-alt"></i> Sign out</div></div></div>
             </div>
         </div>
         <div class="content">
-            <div class="mobile-balance-card" id="mobileBalanceCard">
-                <p>Earned so far</p>
-                <h3 id="mobileEarnAmount">Ksh 0</h3>
-                <button id="mobileWithdrawBtn">Withdraw</button>
-            </div>
-            <div class="filter-tabs">
-                <div class="filter active">All Surveys</div>
-                <div class="filter">Free</div>
-                <div class="filter">Standard</div>
-                <div class="filter">Premium</div>
-            </div>
+            <div class="mobile-balance-card" id="mobileBalanceCard"><p>Earned so far</p><h3 id="mobileEarnAmount">Ksh 0</h3><button id="mobileWithdrawBtn">Withdraw</button></div>
+            <div class="filter-tabs"><div class="filter active">All Surveys</div><div class="filter">Free</div><div class="filter">Standard</div><div class="filter">Premium</div></div>
             <div class="surveys-grid" id="surveysGrid"></div>
         </div>
     </div>
-
     <div class="bottom-nav">
         <a href="dashboard.html" class="nav-link"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
         <a href="surveys.html" class="nav-link active"><i class="fas fa-list"></i><span>Surveys</span></a>
@@ -805,35 +757,14 @@
         <a href="settings.html" class="nav-link"><i class="fas fa-cog"></i><span>Settings</span></a>
         <a href="help.html" class="nav-link"><i class="fas fa-question-circle"></i><span>Help</span></a>
     </div>
-
     <div id="toast" class="toast"></div>
-    <div id="surveyModal" class="modal-overlay">
-        <div class="modal-container">
-            <div class="modal-header"><h3>Take Survey</h3><button class="close-modal" onclick="closeModal('surveyModal')">&times;</button></div>
-            <div class="modal-body" id="surveyQuestionsContainer"></div>
-        </div>
-    </div>
-    <div id="subscriptionModal" class="modal-overlay">
-        <div class="modal-container">
-            <div class="modal-header"><h3 id="subscriptionModalTitle">Choose a Subscription Plan</h3><button class="close-modal" onclick="closeModal('subscriptionModal')">&times;</button></div>
-            <div class="modal-body" id="subscriptionContent"></div>
-        </div>
-    </div>
-    <div id="withdrawalModal" class="modal-overlay">
-        <div class="modal-container">
-            <div class="modal-header"><h3>Withdraw Funds</h3><button class="close-modal" onclick="closeModal('withdrawalModal')">&times;</button></div>
-            <div class="modal-body">
-                <div class="withdraw-input"><label>Available Balance</label><input type="text" id="withdrawBalanceDisplay" readonly style="background:#f9fafb; font-weight:600;"></div>
-                <div class="withdraw-input"><label>Amount to Withdraw (Ksh)</label><input type="number" id="withdrawAmount" placeholder="Min Ksh 10,000" step="100"><div class="withdraw-note">Minimum withdrawal is Ksh 10,000</div></div>
-                <div class="withdraw-input"><label>M-Pesa Number</label><input type="tel" id="withdrawPhone" placeholder="07XXXXXXXX"></div>
-                <button class="btn" id="confirmWithdrawBtn">Request Withdrawal</button>
-            </div>
-        </div>
-    </div>
+    <div id="surveyModal" class="modal-overlay"><div class="modal-container"><div class="modal-header"><h3>Take Survey</h3><button class="close-modal" onclick="closeModal('surveyModal')">&times;</button></div><div class="modal-body" id="surveyQuestionsContainer"></div></div></div>
+    <div id="subscriptionModal" class="modal-overlay"><div class="modal-container"><div class="modal-header"><h3 id="subscriptionModalTitle">Choose a Subscription Plan</h3><button class="close-modal" onclick="closeModal('subscriptionModal')">&times;</button></div><div class="modal-body" id="subscriptionContent"></div></div></div>
+    <div id="withdrawalModal" class="modal-overlay"><div class="modal-container"><div class="modal-header"><h3>Withdraw Funds</h3><button class="close-modal" onclick="closeModal('withdrawalModal')">&times;</button></div><div class="modal-body"><div class="withdraw-input"><label>Available Balance</label><input type="text" id="withdrawBalanceDisplay" readonly style="background:#f9fafb; font-weight:600;"></div><div class="withdraw-input"><label>Amount to Withdraw (Ksh)</label><input type="number" id="withdrawAmount" placeholder="Min Ksh 10,000" step="100"><div class="withdraw-note">Minimum withdrawal is Ksh 10,000</div></div><div class="withdraw-input"><label>M-Pesa Number</label><input type="tel" id="withdrawPhone" placeholder="07XXXXXXXX"></div><button class="btn" id="confirmWithdrawBtn">Request Withdrawal</button></div></div></div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
     <script>
-        // API endpoints (simulated)
+        // ======================== HELPERS ========================
         const API_ENDPOINTS = {
             initiatePayment: '/api/initiate-payment',
             normalizePhone: '/api/normalize-phone',
@@ -863,6 +794,19 @@
             sessionStorage.setItem('loggedInUser', JSON.stringify({ email: user.email, name: user.name }));
         }
 
+        function updateUserUI(user) {
+            if (!user) return;
+            const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            document.querySelector('.avatar').innerText = initials;
+            document.getElementById('userNameStrong').innerText = user.name;
+            document.getElementById('userEmailSpan').innerText = user.email;
+            document.getElementById('earnCardAmount').innerText = `Ksh ${user.earningsTotal}`;
+            document.getElementById('mobileEarnAmount').innerText = `Ksh ${user.earningsTotal}`;
+        }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // ======================== SURVEY DATA (Rewards +2000) ========================
         function generateQuestions() {
             const base = [
                 { text: "How satisfied are you with this brand?", options: ["Very satisfied", "Satisfied", "Neutral", "Dissatisfied"] },
@@ -875,7 +819,6 @@
             return base.slice(0, num);
         }
 
-        // ========== REWARDS INCREASED BY 2000 KSH ==========
         const freeSurvey = { id: 'surveysplus', title: 'SurveysPlus', reward: 5360, requiredPlan: 'free', questions: generateQuestions(), time: '11 mins' };
         const standardSurveys = [
             { id: 'safaricom', title: 'Safaricom M-PESA', reward: 5675, requiredPlan: 'standard', time: '11 mins' },
@@ -901,11 +844,49 @@
         ].map(s => ({ ...s, questions: generateQuestions() }));
         const surveys = [freeSurvey, ...standardSurveys, ...premiumSurveys];
 
+        // ======================== PLAN & QUOTA LOGIC ========================
         function getPlanLevel(planName) {
             const levels = { 'Basic': 1, 'Standard': 2, 'Standard Plus': 3, 'Premium': 4, 'Premium Plus': 5, 'Platinum': 6 };
             return levels[planName] || 0;
         }
 
+        function canTakeSurvey(user, survey) {
+            if (survey.requiredPlan === 'free') return true;
+            const userPlan = user.subscription ? user.subscription.plan : null;
+            const userLevel = getPlanLevel(userPlan);
+            if (survey.requiredPlan === 'standard') {
+                if (userLevel >= 3) return true; // Standard Plus or higher → unlimited
+                if (userLevel === 2) {
+                    const taken = user.standardSurveysTakenCount || 0;
+                    return taken < 3;
+                }
+                return false;
+            }
+            if (survey.requiredPlan === 'premium') {
+                if (userLevel >= 5) return true; // Premium Plus or higher → unlimited
+                if (userLevel === 4) {
+                    const taken = user.premiumSurveysTakenCount || 0;
+                    return taken < 3;
+                }
+                return false;
+            }
+            return false;
+        }
+
+        function getUpgradeOffer(user, survey) {
+            const userPlan = user.subscription ? user.subscription.plan : null;
+            if (survey.requiredPlan === 'standard' && userPlan === 'Standard') {
+                const price = Math.round((499 - 399) * 1.2); // 120
+                return { fromPlan: 'Standard', toPlan: 'Standard Plus', price: price };
+            }
+            if (survey.requiredPlan === 'premium' && userPlan === 'Premium') {
+                const price = Math.round((999 - 799) * 1.2); // 240
+                return { fromPlan: 'Premium', toPlan: 'Premium Plus', price: price };
+            }
+            return null;
+        }
+
+        // ======================== RENDER SURVEYS ========================
         function renderSurveys() {
             const user = getCurrentUser();
             const grid = document.getElementById('surveysGrid');
@@ -915,12 +896,8 @@
                 const badgeClass = s.requiredPlan === 'free' ? 'free' : (s.requiredPlan === 'standard' ? 'standard' : 'premium');
                 const badgeText = s.requiredPlan === 'free' ? 'Free' : (s.requiredPlan === 'standard' ? 'Standard' : 'Premium');
                 return `<div class="survey-card ${completed ? 'completed' : ''}" data-id="${s.id}">
-                            <div class="card-header">
-                                <div class="card-icon"><i class="fas ${s.requiredPlan === 'free' ? 'fa-file-alt' : 'fa-star'}"></i></div>
-                                <div class="badge ${badgeClass}">${badgeText}</div>
-                            </div>
-                            <div class="survey-title">${s.title}</div>
-                            <div class="survey-meta">${s.questions.length} questions</div>
+                            <div class="card-header"><div class="card-icon"><i class="fas ${s.requiredPlan === 'free' ? 'fa-file-alt' : 'fa-star'}"></i></div><div class="badge ${badgeClass}">${badgeText}</div></div>
+                            <div class="survey-title">${s.title}</div><div class="survey-meta">${s.questions.length} questions</div>
                             <div class="reward">Reward Ksh ${s.reward}</div>
                             <button class="btn-take ${completed ? 'disabled' : ''}" data-id="${s.id}" ${completed ? 'disabled' : ''}>${completed ? 'Completed' : 'Take Survey'}</button>
                             <div class="survey-time"><i class="far fa-clock"></i> ${s.time}</div>
@@ -937,12 +914,41 @@
                         showToast('You have already completed this survey');
                         return;
                     }
-                    startSurvey(survey);
+                    // Access control
+                    if (survey.requiredPlan === 'free') {
+                        startSurvey(survey);
+                    } else {
+                        const userPlan = user.subscription ? user.subscription.plan : null;
+                        const userLevel = getPlanLevel(userPlan);
+                        if (survey.requiredPlan === 'standard') {
+                            if (userLevel >= 3) startSurvey(survey);
+                            else if (userLevel === 2) {
+                                const taken = user.standardSurveysTakenCount || 0;
+                                if (taken < 3) startSurvey(survey);
+                                else {
+                                    const offer = getUpgradeOffer(user, survey);
+                                    if (offer) showUpgradeModal(offer, survey);
+                                    else showSubscriptionModal({ surveyId: survey.id, requiredPlan: 'standard' });
+                                }
+                            } else showSubscriptionModal({ surveyId: survey.id, requiredPlan: 'standard' });
+                        } else if (survey.requiredPlan === 'premium') {
+                            if (userLevel >= 5) startSurvey(survey);
+                            else if (userLevel === 4) {
+                                const taken = user.premiumSurveysTakenCount || 0;
+                                if (taken < 3) startSurvey(survey);
+                                else {
+                                    const offer = getUpgradeOffer(user, survey);
+                                    if (offer) showUpgradeModal(offer, survey);
+                                    else showSubscriptionModal({ surveyId: survey.id, requiredPlan: 'premium' });
+                                }
+                            } else showSubscriptionModal({ surveyId: survey.id, requiredPlan: 'premium' });
+                        }
+                    }
                 });
             });
         }
 
-        // Survey taking logic
+        // ======================== SURVEY TAKING ========================
         let currentSurvey = null, currentQIndex = 0, surveyAnswers = [], surveyTimer = null;
         function startSurvey(survey) { currentSurvey = survey; currentQIndex = 0; surveyAnswers = []; showSurveyQuestion(); }
         function showSurveyQuestion() {
@@ -991,6 +997,8 @@
                 user.balance += reward;
                 user.surveysCompleted += 1;
                 user.completedSurveys.push(currentSurvey.id);
+                if (currentSurvey.requiredPlan === 'standard') user.standardSurveysTakenCount = (user.standardSurveysTakenCount || 0) + 1;
+                else if (currentSurvey.requiredPlan === 'premium') user.premiumSurveysTakenCount = (user.premiumSurveysTakenCount || 0) + 1;
                 updateUser(user);
                 updateUserUI(user);
                 renderSurveys();
@@ -1002,15 +1010,221 @@
             }
         }
 
-        // Withdrawal - minimum 10,000
+        // ======================== SUBSCRIPTION & UPGRADE MODAL (with STK) ========================
+        let pendingUpgrade = null;
+        let pendingAction = null;
+        let selectedPlan = null;
+
+        function showUpgradeModal(offer, survey) {
+            pendingUpgrade = { offer, survey };
+            const modal = document.getElementById('subscriptionModal');
+            const container = document.getElementById('subscriptionContent');
+            document.getElementById('subscriptionModalTitle').innerText = 'Upgrade Your Plan';
+            container.innerHTML = `
+                <div style="margin-bottom:20px; background:#e0f2fe; padding:12px; border-radius:12px;"><i class="fas fa-rocket"></i> You have reached your limit for ${offer.fromPlan} surveys.</div>
+                <div class="subscription-plan selected" style="border-color:#4f46e5;"><div class="plan-header"><span class="plan-name">${offer.toPlan}</span><span class="plan-price">Ksh ${offer.price} (Special Upgrade)</span></div><ul class="plan-features"><li><i class="fas fa-check-circle"></i> Unlimited ${offer.toPlan === 'Standard Plus' ? 'standard' : 'premium'} surveys</li><li><i class="fas fa-check-circle"></i> All features of ${offer.fromPlan}</li></ul></div>
+                <button class="next-btn" id="upgradeNowBtn">Upgrade Now for Ksh ${offer.price}</button><button class="back-btn" id="cancelUpgradeBtn">Cancel</button>`;
+            document.getElementById('upgradeNowBtn').addEventListener('click', () => showUpgradePaymentStep(offer));
+            document.getElementById('cancelUpgradeBtn').addEventListener('click', () => { closeModal('subscriptionModal'); pendingUpgrade = null; });
+            modal.classList.add('active');
+        }
+
+        function showUpgradePaymentStep(offer) {
+            const container = document.getElementById('subscriptionContent');
+            document.getElementById('subscriptionModalTitle').innerText = 'Complete Upgrade';
+            container.innerHTML = `<div style="margin-bottom:20px;"><p>Upgrade from <strong>${offer.fromPlan}</strong> to <strong>${offer.toPlan}</strong> for only Ksh ${offer.price}.</p><p>Enter your M-Pesa number to pay Ksh ${offer.price}.</p></div><div class="mpesa-input"><input type="tel" id="mpesaNumber" placeholder="07XXXXXXXX"></div><button class="btn" id="confirmUpgrade">Pay Now</button><button class="back-btn" id="backUpgrade">← Back</button>`;
+            document.getElementById('confirmUpgrade').addEventListener('click', async () => {
+                const rawPhone = document.getElementById('mpesaNumber').value.trim();
+                if (!rawPhone) { showToast('Enter M-Pesa number'); return; }
+                let normalizedPhone = rawPhone;
+                Swal.fire({ title:'Processing', html:'Please wait...', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+                try {
+                    const paymentResponse = await initiatePayment(normalizedPhone, offer.price, `Upgrade to ${offer.toPlan}`);
+                    if (!paymentResponse.reference) throw new Error('No reference');
+                    Swal.fire({ title:'Request Sent!', html:'Check your phone', timer:2000, showConfirmButton:false });
+                    Swal.fire({ title:'Verifying', html:'<div class="loading-spinner"><i class="fas fa-spinner fa-pulse"></i></div>', allowOutsideClick:false, showConfirmButton:false, didOpen:()=>Swal.showLoading() });
+                    const pollResult = await pollPaymentStatus(paymentResponse.reference);
+                    Swal.close();
+                    if (pollResult.success) {
+                        const user = getCurrentUser();
+                        if (user) {
+                            user.subscription = { plan: offer.toPlan, expiry: Date.now() + 30*86400000 };
+                            user.mpesaNumber = normalizedPhone;
+                            updateUser(user);
+                            closeModal('subscriptionModal');
+                            Swal.fire({ title:'Upgraded!', html:`<p>You now have ${offer.toPlan} plan.</p>`, confirmButtonColor:'#4f46e5' });
+                            if (pendingUpgrade && pendingUpgrade.survey) startSurvey(pendingUpgrade.survey);
+                            pendingUpgrade = null;
+                        }
+                    } else throw new Error(pollResult.error);
+                } catch (err) {
+                    Swal.close();
+                    showManualUpgradeFallback(offer, rawPhone);
+                }
+            });
+            document.getElementById('backUpgrade').addEventListener('click', () => showUpgradeModal(offer, pendingUpgrade?.survey));
+        }
+
+        function showManualUpgradeFallback(offer, phoneNumber) {
+            const container = document.getElementById('subscriptionContent');
+            const tillPlaceholder = "5535754";
+            document.getElementById('subscriptionModalTitle').innerText = 'Manual Upgrade Payment';
+            container.innerHTML = `<div class="manual-payment-box"><i class="fas fa-exclamation-triangle"></i> STK Push failed</div><div><p>Pay to Till Number:</p><div class="copy-till"><span class="till-number">${tillPlaceholder}</span><button id="copyTillBtn" class="btn" style="width:auto;">Copy</button></div><p><small>Amount: Ksh ${offer.price}</small></p><div class="mpesa-input"><label>Paste your Mpesa message</label><input type="text" id="manualTxCode" placeholder="Paste the full M-Pesa message here"></div><button id="submitManualBtn" class="btn">I have paid</button><button id="retryStkBtn" class="back-btn">Retry STK</button><button id="backPlanBtn" class="back-btn">Cancel</button></div>`;
+            document.getElementById('copyTillBtn')?.addEventListener('click',()=>{ navigator.clipboard.writeText(tillPlaceholder); showToast('Till number copied'); });
+            document.getElementById('submitManualBtn')?.addEventListener('click',()=>{
+                const rawMsg = document.getElementById('manualTxCode')?.value.trim() || '';
+                const extracted = extractAmountFromMpesaMessage(rawMsg);
+                if (!extracted) { showToast('Could not extract amount'); return; }
+                if (Math.abs(extracted - offer.price) < 0.01) {
+                    const user = getCurrentUser();
+                    if (user) {
+                        user.subscription = { plan: offer.toPlan, expiry: Date.now()+30*86400000 };
+                        user.mpesaNumber = phoneNumber;
+                        updateUser(user);
+                        closeModal('subscriptionModal');
+                        Swal.fire({ title:'Upgrade Successful!', html:`<p>You now have ${offer.toPlan} plan.</p>`, confirmButtonColor:'#4f46e5' });
+                        if (pendingUpgrade?.survey) startSurvey(pendingUpgrade.survey);
+                        pendingUpgrade = null;
+                    }
+                } else showToast(`Amount mismatch: expected ${offer.price}, got ${extracted}`);
+            });
+            document.getElementById('retryStkBtn')?.addEventListener('click',()=>showUpgradePaymentStep(offer));
+            document.getElementById('backPlanBtn')?.addEventListener('click',()=>closeModal('subscriptionModal'));
+        }
+
+        function extractAmountFromMpesaMessage(msg) {
+            const match = msg.match(/(\d+(?:\.\d{1,2})?)/);
+            if (!match) return null;
+            const amt = parseFloat(match[1]);
+            return isNaN(amt) ? null : amt;
+        }
+
+        // Subscription for new users
+        function showSubscriptionModal(action) {
+            pendingAction = action;
+            selectedPlan = null;
+            showPlanSelection();
+        }
+
+        function showPlanSelection() {
+            const modal = document.getElementById('subscriptionModal');
+            const container = document.getElementById('subscriptionContent');
+            document.getElementById('subscriptionModalTitle').innerText = 'Choose a Subscription Plan';
+            const required = pendingAction ? pendingAction.requiredPlan : null;
+            let message = '';
+            if (required === 'standard') message = '<div style="margin-bottom:20px; background:#fef3c7; padding:12px; border-radius:12px;"><i class="fas fa-info-circle"></i> This survey requires a <strong>Standard</strong> or higher plan.</div>';
+            else if (required === 'premium') message = '<div style="margin-bottom:20px; background:#f1e5ff; padding:12px; border-radius:12px;"><i class="fas fa-info-circle"></i> This survey requires a <strong>Premium</strong> or higher plan.</div>';
+            container.innerHTML = `${message}<div style="margin-bottom:20px;"><p>Select a plan that fits your needs. All plans include withdrawals after reaching Ksh 500.</p></div>
+                <div class="subscription-plan" data-plan="Basic" data-price="199"><div class="plan-header"><span class="plan-name">Basic</span><span class="plan-price">Ksh 199 / month</span></div><ul class="plan-features"><li><i class="fas fa-check-circle"></i> Access to free surveys</li><li><i class="fas fa-check-circle"></i> Fast withdrawals</li><li><i class="fas fa-check-circle"></i> Standard support</li></ul></div>
+                <div class="subscription-plan" data-plan="Standard" data-price="399"><div class="plan-header"><span class="plan-name">Standard</span><span class="plan-price">Ksh 399 / month</span></div><ul class="plan-features"><li><i class="fas fa-check-circle"></i> All Basic benefits</li><li><i class="fas fa-check-circle"></i> Priority support</li><li><i class="fas fa-check-circle"></i> 3 standard surveys daily</li><li><i class="fas fa-check-circle"></i> Up to Ksh 15,000 monthly earnings</li></ul></div>
+                <div class="subscription-plan" data-plan="Standard Plus" data-price="499"><div class="plan-header"><span class="plan-name">Standard Plus</span><span class="plan-price">Ksh 499 / month</span><span style="font-size:0.7rem; background:#f97316; color:white; padding:2px 8px; border-radius:20px;">BEST VALUE</span></div><ul class="plan-features"><li><i class="fas fa-check-circle"></i> All Standard benefits</li><li><i class="fas fa-check-circle"></i> 5 standard surveys daily</li><li><i class="fas fa-check-circle"></i> Up to Ksh 30,000 monthly earnings</li></ul></div>
+                <div class="subscription-plan" data-plan="Premium" data-price="799"><div class="plan-header"><span class="plan-name">Premium</span><span class="plan-price">Ksh 799 / month</span></div><ul class="plan-features"><li><i class="fas fa-check-circle"></i> All Standard Plus benefits</li><li><i class="fas fa-check-circle"></i> Access to premium surveys (up to Ksh 760)</li><li><i class="fas fa-check-circle"></i> 10 premium surveys daily</li><li><i class="fas fa-check-circle"></i> Up to Ksh 40,500 monthly earnings</li></ul></div>
+                <div class="subscription-plan" data-plan="Premium Plus" data-price="999"><div class="plan-header"><span class="plan-name">Premium Plus</span><span class="plan-price">Ksh 999 / month</span></div><ul class="plan-features"><li><i class="fas fa-check-circle"></i> All Premium benefits</li><li><i class="fas fa-check-circle"></i> 15 premium surveys daily</li><li><i class="fas fa-check-circle"></i> Up to Ksh 60,500 monthly earnings</li></ul></div>
+                <div class="subscription-plan" data-plan="Platinum" data-price="1499"><div class="plan-header"><span class="plan-name">Platinum</span><span class="plan-price">Ksh 1499 / month</span><span style="font-size:0.7rem; background:#f97316; color:white; padding:2px 8px; border-radius:20px;">BEST DEAL</span></div><ul class="plan-features"><li><i class="fas fa-check-circle"></i> All Premium Plus benefits</li><li><i class="fas fa-check-circle"></i> 15 premium surveys daily</li><li><i class="fas fa-check-circle"></i> 5 moderator surveys daily</li><li><i class="fas fa-check-circle"></i> Up to Ksh 100,000 monthly earnings</li></ul></div>
+                <button class="next-btn" id="nextToMpesa">Continue</button>`;
+            const planElements = document.querySelectorAll('.subscription-plan');
+            if (required === 'standard') {
+                const standardPlan = Array.from(planElements).find(p => p.getAttribute('data-plan') === 'Standard');
+                if (standardPlan) { standardPlan.classList.add('selected'); selectedPlan = { name: 'Standard', price: 399 }; }
+            } else if (required === 'premium') {
+                const premiumPlan = Array.from(planElements).find(p => p.getAttribute('data-plan') === 'Premium');
+                if (premiumPlan) { premiumPlan.classList.add('selected'); selectedPlan = { name: 'Premium', price: 799 }; }
+            }
+            planElements.forEach(plan => {
+                plan.addEventListener('click', () => {
+                    document.querySelectorAll('.subscription-plan').forEach(p => p.classList.remove('selected'));
+                    plan.classList.add('selected');
+                    selectedPlan = { name: plan.getAttribute('data-plan'), price: parseInt(plan.getAttribute('data-price')) };
+                });
+            });
+            document.getElementById('nextToMpesa').addEventListener('click', () => {
+                if (!selectedPlan) { showToast('Please select a plan'); return; }
+                showMpesaStep();
+            });
+            modal.classList.add('active');
+        }
+
+        function showMpesaStep() {
+            const container = document.getElementById('subscriptionContent');
+            document.getElementById('subscriptionModalTitle').innerText = 'Complete Subscription';
+            container.innerHTML = `<div style="margin-bottom:20px;"><p>You've selected <strong>${selectedPlan.name}</strong> plan (Ksh ${selectedPlan.price}).</p><p>Enter your M-Pesa number to pay Ksh ${selectedPlan.price}.</p></div><div class="mpesa-input"><input type="tel" id="mpesaNumber" placeholder="07XXXXXXXX"></div><button class="btn" id="confirmSubscription">Subscribe Now</button><button class="back-btn" id="backToPlans">← Back to plans</button>`;
+            document.getElementById('confirmSubscription').addEventListener('click', async () => {
+                const rawPhone = document.getElementById('mpesaNumber').value.trim();
+                if (!rawPhone) { showToast('Please enter your M-Pesa number'); return; }
+                let normalizedPhone = rawPhone;
+                Swal.fire({ title: 'Processing', html: '<div>Please wait...</div>', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                try {
+                    const paymentResponse = await initiatePayment(normalizedPhone, selectedPlan.price, `SurveyEarn ${selectedPlan.name} Subscription`);
+                    if (!paymentResponse.reference) throw new Error('No payment reference');
+                    Swal.fire({ title: 'Request Sent!', html: '<div><i class="fas fa-mobile-alt"></i><p>Check your phone</p></div>', timer: 3000, showConfirmButton: false });
+                    Swal.fire({ title: 'Verifying Payment', html: '<div class="loading-spinner"><i class="fas fa-spinner fa-pulse"></i></div>', allowOutsideClick: false, showConfirmButton: false, didOpen: () => Swal.showLoading() });
+                    const pollResult = await pollPaymentStatus(paymentResponse.reference);
+                    Swal.close();
+                    if (pollResult.success) {
+                        const user = getCurrentUser();
+                        if (user) {
+                            user.subscription = { plan: selectedPlan.name, expiry: Date.now() + 30 * 24 * 60 * 60 * 1000 };
+                            user.mpesaNumber = normalizedPhone;
+                            updateUser(user);
+                            closeModal('subscriptionModal');
+                            Swal.fire({ title: 'Subscription Active!', html: `<div><i class="fas fa-check-circle" style="font-size:2rem;color:#10b981;"></i><p>Your ${selectedPlan.name} plan is now active.</p></div>`, confirmButtonText: 'Great!', confirmButtonColor: '#4f46e5' });
+                            if (pendingAction && pendingAction.surveyId) {
+                                const survey = surveys.find(s => s.id === pendingAction.surveyId);
+                                if (survey) startSurvey(survey);
+                            }
+                            pendingAction = null;
+                        }
+                    } else throw new Error(pollResult.error);
+                } catch (err) {
+                    Swal.close();
+                    showManualPaymentFallback(selectedPlan, rawPhone);
+                }
+            });
+            document.getElementById('backToPlans').addEventListener('click', () => showPlanSelection());
+        }
+
+        function showManualPaymentFallback(plan, phoneNumber) {
+            const container = document.getElementById('subscriptionContent');
+            const tillPlaceholder = "5535754";
+            document.getElementById('subscriptionModalTitle').innerText = 'Manual Payment Option';
+            container.innerHTML = `<div class="manual-payment-box"><i class="fas fa-exclamation-triangle"></i> <strong>STK Push failed</strong><p>You can still subscribe by paying manually via M-Pesa.</p></div><div style="background:#f9fafb; padding:16px; border-radius:16px;"><p><strong>Pay to Till Number:</strong></p><div class="copy-till"><span class="till-number">${tillPlaceholder}</span><button id="copyTillBtn" class="btn" style="background:#4f46e5; padding:6px 12px; width:auto;">Copy</button></div><p><small>Use M-Pesa -> Lipa Na M-Pesa -> Buy Goods and enter Till Number ${tillPlaceholder}. Amount: Ksh ${plan.price}</small></p><div class="mpesa-input"><label>Paste your Mpesa message</label><input type="text" id="manualTxCode" placeholder="Paste the full M-Pesa message here"></div><button id="submitManualPaymentBtn" class="btn">I have paid</button><button id="backToPlansManual" class="back-btn">← Change Plan</button></div>`;
+            document.getElementById('copyTillBtn')?.addEventListener('click', () => { navigator.clipboard.writeText(tillPlaceholder); showToast('Till number copied!'); });
+            document.getElementById('submitManualPaymentBtn')?.addEventListener('click', () => {
+                const rawMessage = document.getElementById('manualTxCode')?.value.trim() || '';
+                if (!rawMessage) { showToast('Please paste your M-Pesa message'); return; }
+                const extractedAmount = extractAmountFromMpesaMessage(rawMessage);
+                if (extractedAmount === null) { showToast('Could not extract amount'); return; }
+                if (Math.abs(extractedAmount - plan.price) < 0.01) {
+                    const user = getCurrentUser();
+                    if (user) {
+                        user.subscription = { plan: plan.name, expiry: Date.now() + 30 * 24 * 60 * 60 * 1000 };
+                        user.mpesaNumber = phoneNumber;
+                        updateUser(user);
+                        closeModal('subscriptionModal');
+                        Swal.fire({ title: '✅ Subscription Activated!', html: `<div><i class="fas fa-check-circle" style="font-size:2rem;color:#10b981"></i><p>Your ${plan.name} plan is now active.</p></div>`, confirmButtonText: 'Great!', confirmButtonColor: '#4f46e5' });
+                        if (pendingAction && pendingAction.surveyId) {
+                            const survey = surveys.find(s => s.id === pendingAction.surveyId);
+                            if (survey) startSurvey(survey);
+                        }
+                        pendingAction = null;
+                    }
+                } else showToast(`Amount mismatch. Expected Ksh ${plan.price}, got ${extractedAmount}.`);
+            });
+            document.getElementById('backToPlansManual')?.addEventListener('click', () => showPlanSelection());
+        }
+
+        // ======================== PAYMENT SIMULATION (STK) ========================
+        async function normalizePhoneNumber(phone) { try { const res = await fetch(API_ENDPOINTS.normalizePhone, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) }); if (!res.ok) throw new Error(); const data = await res.json(); return data.normalized_phone || phone; } catch { return phone; } }
+        async function initiatePayment(phoneNumber, amount, description) { const res = await fetch(API_ENDPOINTS.initiatePayment, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone_number: phoneNumber, amount, description }) }); if (!res.ok) throw new Error(); return await res.json(); }
+        async function verifyPayment(reference) { const res = await fetch(`${API_ENDPOINTS.verifyPayment}?reference=${reference}`); if (!res.ok) throw new Error(); return await res.json(); }
+        function pollPaymentStatus(reference, maxAttempts = 10, interval = 4000) { return new Promise((resolve) => { let attempts = 0; const poll = async () => { attempts++; try { const result = await verifyPayment(reference); const status = result.status || (result.data && result.data.status); if (status === 'SUCCESS' || status === 'COMPLETED') resolve({ success: true, data: result }); else if (['FAILED', 'CANCELLED', 'TIMEOUT'].includes(status)) resolve({ success: false, error: `Payment ${status.toLowerCase()}` }); else if (attempts >= maxAttempts) resolve({ success: false, error: 'Payment timeout' }); else setTimeout(poll, interval); } catch { if (attempts >= maxAttempts) resolve({ success: false, error: 'Unable to verify' }); else setTimeout(poll, interval); } }; poll(); }); }
+
+        // ======================== WITHDRAWAL (Min 10k) & ACTIVATION FEE ========================
         function handleWithdrawClick() {
             const user = getCurrentUser();
             if (!user) return;
-            if (user.balance < 10000) {
-                showToast('Minimum withdrawal is Ksh 10,000');
-                return;
-            }
-            const needActivation = (user.balance >= 10000) && (!user.activationFeePaid);
+            if (user.balance < 10000) { showToast('Minimum withdrawal is Ksh 10,000'); return; }
+            const needActivation = (user.balance > 4000) && (!user.activationFeePaid);
             if (needActivation) showActivationFeeModal();
             else showWithdrawalModal();
         }
@@ -1027,18 +1241,9 @@
             if (!user) return;
             const amount = parseFloat(document.getElementById('withdrawAmount').value);
             const phone = document.getElementById('withdrawPhone').value.trim();
-            if (isNaN(amount) || amount < 10000) {
-                showToast('Please enter a valid amount (minimum Ksh 10,000)');
-                return;
-            }
-            if (amount > user.balance) {
-                showToast('Amount exceeds available balance');
-                return;
-            }
-            if (!phone || !/^07\d{8}$/.test(phone)) {
-                showToast('Enter a valid M-Pesa number (07XXXXXXXX)');
-                return;
-            }
+            if (isNaN(amount) || amount < 10000) { showToast('Please enter a valid amount (minimum Ksh 10,000)'); return; }
+            if (amount > user.balance) { showToast('Amount exceeds available balance'); return; }
+            if (!phone || !/^07\d{8}$/.test(phone)) { showToast('Enter a valid M-Pesa number (07XXXXXXXX)'); return; }
             Swal.fire({ title: 'Processing Withdrawal', html: '<div>Please wait...</div>', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
             setTimeout(() => {
                 user.balance -= amount;
@@ -1054,11 +1259,7 @@
             const modal = document.getElementById('subscriptionModal');
             const container = document.getElementById('subscriptionContent');
             document.getElementById('subscriptionModalTitle').innerText = 'One-Time Activation Fee';
-            container.innerHTML = `<div class="manual-payment-box"><i class="fas fa-gem"></i> <strong>One-time activation fee of Ksh 2,000 is required.</strong><p>This fee ensures secure and verified accounts. After payment, you can withdraw any amount anytime.</p></div>
-            <div><p>Enter your M-Pesa number to pay Ksh 2,000.</p></div>
-            <div class="mpesa-input"><input type="tel" id="activationPhone" placeholder="07XXXXXXXX"></div>
-            <button class="btn" id="payActivationBtn">Pay Ksh 2,000</button>
-            <button class="back-btn" id="cancelActivationBtn">Cancel</button>`;
+            container.innerHTML = `<div class="manual-payment-box" style="background:#e0f2fe; border-left-color:#0284c7;"><i class="fas fa-gem"></i> <strong>One-time activation fee of Ksh 2,000 is required.</strong><p>After payment, you can withdraw any amount anytime.</p></div><div><p>Enter your M-Pesa number to pay Ksh 2,000.</p></div><div class="mpesa-input"><input type="tel" id="activationPhone" placeholder="07XXXXXXXX"></div><button class="btn" id="payActivationBtn">Pay Ksh 2,000</button><button class="back-btn" id="cancelActivationBtn">Cancel</button>`;
             modal.classList.add('active');
             document.getElementById('payActivationBtn').addEventListener('click', async () => {
                 const rawPhone = document.getElementById('activationPhone').value.trim();
@@ -1066,7 +1267,6 @@
                 let normalizedPhone = rawPhone;
                 Swal.fire({ title: 'Processing Activation', html: '<div>Please wait...</div>', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
                 try {
-                    // Simulate payment success for demo
                     setTimeout(() => {
                         Swal.close();
                         const user = getCurrentUser();
@@ -1077,18 +1277,7 @@
             document.getElementById('cancelActivationBtn').addEventListener('click', () => closeModal('subscriptionModal'));
         }
 
-        function updateUserUI(user) {
-            if (!user) return;
-            const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase();
-            document.querySelector('.avatar').innerText = initials;
-            document.getElementById('userNameStrong').innerText = user.name;
-            document.getElementById('userEmailSpan').innerText = user.email;
-            document.getElementById('earnCardAmount').innerText = `Ksh ${user.earningsTotal}`;
-            document.getElementById('mobileEarnAmount').innerText = `Ksh ${user.earningsTotal}`;
-        }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-        // Dropdowns
+        // ======================== INIT & EVENT LISTENERS ========================
         const notifBtn = document.getElementById('notifBtn');
         const notifMenu = document.getElementById('notifMenu');
         const userBtn = document.getElementById('userBtn');
@@ -1105,7 +1294,6 @@
         document.getElementById('mobileWithdrawBtn')?.addEventListener('click', handleWithdrawClick);
         document.getElementById('confirmWithdrawBtn')?.addEventListener('click', processWithdrawal);
 
-        // Filter tabs
         document.querySelectorAll('.filter').forEach(filter => {
             filter.addEventListener('click', () => {
                 document.querySelectorAll('.filter').forEach(f => f.classList.remove('active'));
@@ -1123,7 +1311,6 @@
             });
         });
 
-        // Initialize
         const user = getCurrentUser();
         if (!user) window.location.href = 'login.html';
         else {
@@ -1132,6 +1319,8 @@
             if (!user.balance) user.balance = 0;
             if (!user.completedSurveys) user.completedSurveys = [];
             if (!user.surveysCompleted) user.surveysCompleted = 0;
+            if (user.standardSurveysTakenCount === undefined) user.standardSurveysTakenCount = 0;
+            if (user.premiumSurveysTakenCount === undefined) user.premiumSurveysTakenCount = 0;
             updateUserUI(user);
             renderSurveys();
         }
